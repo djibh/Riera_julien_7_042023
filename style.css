@@ -1,0 +1,54 @@
+body {
+    box-sizing: border-box;
+}
+
+header {
+    text-align: center;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 0 8px;
+    height: 69px;
+    border: none;
+    border-radius: 5px;
+    background-color: #E7E7E7;
+}
+
+.filters.row {
+    margin: 2em 0;
+}
+
+.btn.dropdown-toggle {
+    border: none;
+    max-width: 170px;
+}
+
+.btn.ingredients {
+    background-color: #3282F7;
+}
+
+.btn.apparels {
+    background-color: #68D9A4;
+}
+
+.btn.ustensils {
+    background-color: #ED6454;
+}
+
+.recipe-card {
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+}
+
+.recipe-card__title {
+    padding: 0.5em;
+    font-size: 0.8rem;
+    text-align: left;
+}
