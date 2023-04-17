@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "commonjs": true,
         "es2021": true
     },
     "overrides": [
@@ -10,5 +11,10 @@
         "sourceType": "module"
     },
     "rules": {
+        "semi": [2, "always"],
+        "no-undef": "off",
+        "no-unused-vars": "warn",
+        "prefer-template": "error",
+        "space-before-function-paren": ["error", "never"]
     }
 }

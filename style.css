@@ -1,54 +1,99 @@
 body {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 header {
-    text-align: center;
+  margin: 2em auto;
+  text-align: center;
 }
 
 main {
-    max-width: 1200px;
-    margin: auto;
-    text-align: center;
+  max-width: 1200px;
+  padding: 0 2em;
+  margin: auto;
+  text-align: center;
+}
+
+.search {
+  position: relative;
 }
 
 #search-bar {
-    width: 100%;
-    padding: 0 8px;
-    height: 69px;
-    border: none;
-    border-radius: 5px;
-    background-color: #E7E7E7;
+  width: 100%;
+  padding: 0 1rem;
+  height: 3em;
+  border: none;
+  border-radius: 5px;
+  background-color: #e7e7e7;
+}
+
+#search-bar__icon {
+  position: absolute;
+  right: 1rem;
+  top: 1.5em;
+  transform: translateY(-50%);
 }
 
 .filters.row {
-    margin: 2em 0;
+  margin: 2em 0;
 }
 
-.btn.dropdown-toggle {
-    border: none;
-    max-width: 170px;
+.filters button:nth-child(2) {
+  margin: 0 1.5em;
+}
+
+.filters button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  max-width: 170px;
 }
 
 .btn.ingredients {
-    background-color: #3282F7;
+  background-color: #3282f7;
+}
+
+.btn.ingredients:hover {
+  background-color: #2565c5;
 }
 
 .btn.apparels {
-    background-color: #68D9A4;
+  background-color: #68d9a4;
+}
+
+.btn.apparels:hover {
+  background-color: #5cbe90;
 }
 
 .btn.ustensils {
-    background-color: #ED6454;
+  background-color: #ed6454;
 }
 
-.recipe-card {
-    background-color: rgb(240, 240, 240);
-    border-radius: 5px;
+.btn.ustensils:hover {
+  background-color: #c35145;
+}
+
+.card.recipe-card {
+  height: 20em;
+  background-color: rgb(240, 240, 240);
+  border-radius: 5px;
+  border: none;
+}
+
+.ingredients-list {
+  padding: 0;
+  list-style-type: none;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.card .recipe-card__img {
+  width: 40%;
+  align-self: center;
 }
 
 .recipe-card__title {
-    padding: 0.5em;
-    font-size: 0.8rem;
-    text-align: left;
+  font-size: 0.9rem;
+  text-align: left;
 }

@@ -1,0 +1,9 @@
+{
+    "eslint.format.enable": false,
+    "eslint.execArgv": null,
+    "eslint.codeActionsOnSave.rules": null,
+  //   "eslint.alwaysShowStatus": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  }
