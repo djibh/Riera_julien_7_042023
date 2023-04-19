@@ -1,7 +1,7 @@
 import { recipes } from "../data/recipes.js";
+import { handlefilterButtons, buildFiltersContentItems } from "./filter.js";
 
 const bsRow = document.getElementById("recipes-grid");
-const filterButtons = document.querySelectorAll(".filters .btn");
 
 let ingredientsFilter = [];
 let results = [];
@@ -14,11 +14,10 @@ const allIngredients = () => {
       listOfIngredients.push(ingredient.ingredient);
     });
   });
+
+  // create an array with unique values
   ingredientsFilter = [...new Set(listOfIngredients)];
   ingredientsFilter.sort();
-  console.log("====================================");
-  console.log(ingredientsFilter);
-  console.log("====================================");
 };
 
 allIngredients();
@@ -71,7 +70,6 @@ function showRecipes(recipesList) {
     const img = document.createElement("img");
     img.classList.add("recipe-card__img");
     img.classList.add("card-img-top");
-    img.setAttribute("src", "../assets/logo.png");
     recipeCard.appendChild(img);
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
@@ -98,26 +96,32 @@ function showRecipes(recipesList) {
   });
 }
 
-// manage filter buttons classes for UI modifications
-filterButtons.forEach(button => {
-  button.addEventListener('click', function() {
+handlefilterButtons();
 
-    // remove selected class when already selected class is click again
-    if (this.classList.contains('selected')) {
-      this.classList.remove('selected');
-      return;
-    }
+buildFiltersContentItems(recipes);
 
-    // Reduce size of other filters before increasing size of the new selected one
-    removeSelectedClassForFilterButtons();
-    this.classList.toggle('selected');
-  });
-});
+// filterIngredientsList(ingredientsFilter);
 
-function removeSelectedClassForFilterButtons() {
-  filterButtons.forEach(button => {
-    if (button.classList.contains('selected')) { 
-      button.classList.remove('selected'); 
-      return; }
-  });
-}
+// // manage filter buttons classes for UI modifications
+// filterButtons.forEach(button => {
+//   button.addEventListener('click', function() {
+
+//     // remove selected class when already selected class is click again
+//     if (this.classList.contains('selected')) {
+//       this.classList.remove('selected');
+//       return;
+//     }
+
+//     // Reduce size of other filters before increasing size of the new selected one
+//     removeSelectedClassForFilterButtons();
+//     this.classList.toggle('selected');
+//   });
+// });
+
+// function removeSelectedClassForFilterButtons() {
+//   filterButtons.forEach(button => {
+//     if (button.classList.contains('selected')) { 
+//       button.classList.remove('selected'); 
+//       return; }
+//   });
+// }
