@@ -1,7 +1,27 @@
 import { recipes } from "../data/recipes.js";
 
 const bsRow = document.getElementById("recipes-grid");
+const filterButtons = document.querySelectorAll(".filters .btn");
+
+let ingredientsFilter = [];
 let results = [];
+
+// tags variables
+const allIngredients = () => {
+  let listOfIngredients = [];
+  recipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      listOfIngredients.push(ingredient.ingredient);
+    });
+  });
+  ingredientsFilter = [...new Set(listOfIngredients)];
+  ingredientsFilter.sort();
+  console.log("====================================");
+  console.log(ingredientsFilter);
+  console.log("====================================");
+};
+
+allIngredients();
 
 showRecipes(recipes);
 searchRecipes();
@@ -12,23 +32,26 @@ function searchRecipes() {
   input.addEventListener("input", () => {
     const userInput = input.value.trim().toLowerCase();
 
-    // Supprime les anciens résultats
+    // refresh recipes grid
     bsRow.innerHTML = "";
 
-    // Vérifie que la recherche est suffisamment longue
+    // check for input length
     if (userInput.length < 3) {
       showRecipes(recipes);
       return;
     }
 
-    // Récupère les résultats correspondants à la recherche
+    // fetch results from search and update recipes grid
     results = getMatchingResults(userInput);
     showRecipes(results);
   });
 
   function getMatchingResults(input) {
-    return recipes.filter((result) =>
-      result.name.toLowerCase().includes(input)
+    //FIXME - add check in ingredients
+    return recipes.filter(
+      (recipe) =>
+        recipe.name.toLowerCase().includes(input) ||
+        recipe.description.toLowerCase().includes(input)
     );
   }
 }
@@ -59,7 +82,7 @@ function showRecipes(recipesList) {
     const ingredientsList = document.createElement("ul");
     ingredientsList.classList.add("ingredients-list");
 
-    ingredients.forEach((ingredient) => {
+    ingredients.forEach(ingredient => {
       const ingredientItem = document.createElement("li");
       ingredientItem.classList.add("card-text");
       ingredientItem.innerText = `${ingredient.ingredient}: ${ingredient.quantity} ${ingredient.unit}`;
@@ -72,5 +95,29 @@ function showRecipes(recipesList) {
     recipeCard.appendChild(cardBody);
 
     bsRow.appendChild(cardBsContainer);
+  });
+}
+
+// manage filter buttons classes for UI modifications
+filterButtons.forEach(button => {
+  button.addEventListener('click', function() {
+
+    // remove selected class when already selected class is click again
+    if (this.classList.contains('selected')) {
+      this.classList.remove('selected');
+      return;
+    }
+
+    // Reduce size of other filters before increasing size of the new selected one
+    removeSelectedClassForFilterButtons();
+    this.classList.toggle('selected');
+  });
+});
+
+function removeSelectedClassForFilterButtons() {
+  filterButtons.forEach(button => {
+    if (button.classList.contains('selected')) { 
+      button.classList.remove('selected'); 
+      return; }
   });
 }

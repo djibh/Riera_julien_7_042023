@@ -11,10 +11,19 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
-    <script src="https://kit.fontawesome.com/c8fb8f238c.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/c8fb8f238c.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="data/recipes.js" type="module"></script>
     <script src="scripts/index.js" type="module"></script>
     <script src="scripts/search.js" type="module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header>
@@ -37,23 +46,23 @@
       <section class="tags-container"></section>
 
       <section class="filters row align-items-start">
-        <button class="col btn btn-secondary ingredients">
-          Ingrédients
+        <div class="col btn btn-secondary ingredients-filter">
+          <input type="seach" value="Ingrédients">
           <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <button class="col btn btn-secondary apparels">
-          Appareils
+        </div>
+        <div class="col btn btn-secondary appliances-filter">
+          <input type="seach" value="Appareils">
           <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <button class="col btn btn-secondary ustensils">
-          Ustensiles
+        </div>
+        <div class="col btn btn-secondary ustensils-filter">
+          <input type="seach" value="Ustensiles">
           <i class="fa-solid fa-chevron-down"></i>
-        </button>
+        </div>
+
       </section>
       <section class="recipes">
         <div class="container">
-          <div class="row" id="recipes-grid">
-          </div>
+          <div class="row" id="recipes-grid"></div>
         </div>
       </section>
     </main>
