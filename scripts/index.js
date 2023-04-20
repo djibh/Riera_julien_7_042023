@@ -1,29 +1,12 @@
 import { recipes } from "../data/recipes.js";
-import { handlefilterButtons, buildFiltersContentItems } from "./filter.js";
+import { buildFiltersContentItems } from "./filter.js";
 
 const bsRow = document.getElementById("recipes-grid");
-
-let ingredientsFilter = [];
 let results = [];
-
-// tags variables
-const allIngredients = () => {
-  let listOfIngredients = [];
-  recipes.forEach((recipe) => {
-    recipe.ingredients.forEach((ingredient) => {
-      listOfIngredients.push(ingredient.ingredient);
-    });
-  });
-
-  // create an array with unique values
-  ingredientsFilter = [...new Set(listOfIngredients)];
-  ingredientsFilter.sort();
-};
-
-allIngredients();
 
 showRecipes(recipes);
 searchRecipes();
+buildFiltersContentItems(recipes);
 
 function searchRecipes() {
   const input = document.getElementById("search-bar");
@@ -80,7 +63,7 @@ function showRecipes(recipesList) {
     const ingredientsList = document.createElement("ul");
     ingredientsList.classList.add("ingredients-list");
 
-    ingredients.forEach(ingredient => {
+    ingredients.forEach((ingredient) => {
       const ingredientItem = document.createElement("li");
       ingredientItem.classList.add("card-text");
       ingredientItem.innerText = `${ingredient.ingredient}: ${ingredient.quantity} ${ingredient.unit}`;
@@ -95,33 +78,3 @@ function showRecipes(recipesList) {
     bsRow.appendChild(cardBsContainer);
   });
 }
-
-handlefilterButtons();
-
-buildFiltersContentItems(recipes);
-
-// filterIngredientsList(ingredientsFilter);
-
-// // manage filter buttons classes for UI modifications
-// filterButtons.forEach(button => {
-//   button.addEventListener('click', function() {
-
-//     // remove selected class when already selected class is click again
-//     if (this.classList.contains('selected')) {
-//       this.classList.remove('selected');
-//       return;
-//     }
-
-//     // Reduce size of other filters before increasing size of the new selected one
-//     removeSelectedClassForFilterButtons();
-//     this.classList.toggle('selected');
-//   });
-// });
-
-// function removeSelectedClassForFilterButtons() {
-//   filterButtons.forEach(button => {
-//     if (button.classList.contains('selected')) { 
-//       button.classList.remove('selected'); 
-//       return; }
-//   });
-// }
