@@ -64,9 +64,20 @@ function showRecipes(recipesList) {
     ingredientsList.classList.add("ingredients-list");
 
     ingredients.forEach((ingredient) => {
+
+      let text = `${ingredient.ingredient}`;
+
+      if (ingredient.quantity) {
+        text += `: ${ingredient.quantity}`;
+      }
+
+      if (ingredient.unit) {
+        text += ` ${ingredient.unit}`;
+      }
+
       const ingredientItem = document.createElement("li");
       ingredientItem.classList.add("card-text");
-      ingredientItem.innerText = `${ingredient.ingredient}: ${ingredient.quantity} ${ingredient.unit}`;
+      ingredientItem.innerText = text;
       ingredientsList.appendChild(ingredientItem);
     });
 
