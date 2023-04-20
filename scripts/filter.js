@@ -27,6 +27,7 @@ function _buildIngredientsFilterItems(recipes) {
 
   allIngredients(recipes).forEach((ingredient) => {
     const ingredientItem = document.createElement("li");
+    ingredientItem.classList.add('filter-list__item');
     ingredientItem.innerText = ingredient;
     $ingredientsListContainer.appendChild(ingredientItem);
   });
@@ -46,6 +47,7 @@ function _buildAppliancesFilterItems(recipes) {
 
   allAppliances(recipes).forEach((appliance) => {
     const applianceItem = document.createElement("li");
+    applianceItem.classList.add('filter-list__item');
     applianceItem.innerText = appliance;
     $appliancesListContainer.appendChild(applianceItem);
   });
@@ -68,6 +70,7 @@ function _buildUstensilsFilterItems(recipes) {
 
   allUstensils(recipes).forEach((ingredient) => {
     const ustensilItem = document.createElement("li");
+    ustensilItem.classList.add('filter-list__item');
     ustensilItem.innerText = ingredient;
     $ustensilsListContainer.appendChild(ustensilItem);
   });

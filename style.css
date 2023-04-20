@@ -87,8 +87,6 @@ main {
   max-height: 0px;
   width: 100%;
   overflow: auto;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   top: calc(3em - 6px);
   left: 0;
   list-style-type: none;
@@ -106,8 +104,21 @@ main {
   opacity: 1;
 }
 
+.filter-list__item {
+  width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: 100ms;
+}
+
+.filter-list__item:hover {
+  padding-left: 4px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .btn.selected {
-  max-width: 50%;
+  max-width: 55%;
 }
 
 .btn.ingredients-filter {
