@@ -41,12 +41,13 @@ function searchRecipes() {
 function showRecipes(recipesList) {
   recipesList.forEach((recipe) => {
     const ingredients = recipe.ingredients;
+    const cardBsContainerClasses = ["col-lg-4", "col-md-6", "card-container", "gy-4"];
 
     const cardBsContainer = document.createElement("div");
-    cardBsContainer.classList.add("col-lg-4");
-    cardBsContainer.classList.add("col-md-6");
-    cardBsContainer.classList.add("card-container");
-    cardBsContainer.classList.add("gy-4");
+    cardBsContainerClasses.forEach(classe => {
+      cardBsContainer.classList.add(classe);
+    });
+    
     const recipeCard = document.createElement("article");
     recipeCard.classList.add("card");
     recipeCard.classList.add("recipe-card");
@@ -64,7 +65,6 @@ function showRecipes(recipesList) {
     ingredientsList.classList.add("ingredients-list");
 
     ingredients.forEach((ingredient) => {
-
       let text = `${ingredient.ingredient}`;
 
       if (ingredient.quantity) {
