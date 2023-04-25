@@ -41,13 +41,9 @@ function searchRecipes() {
 function showRecipes(recipesList) {
   recipesList.forEach((recipe) => {
     const ingredients = recipe.ingredients;
-    const cardBsContainerClasses = ["col-lg-4", "col-md-6", "card-container", "gy-4"];
 
     const cardBsContainer = document.createElement("div");
-    cardBsContainerClasses.forEach(classe => {
-      cardBsContainer.classList.add(classe);
-    });
-    
+    cardBsContainer.classList.add('col-lg-4', 'col-md-6', 'card-container', 'gy-4');
     const recipeCard = document.createElement("article");
     recipeCard.classList.add("card");
     recipeCard.classList.add("recipe-card");

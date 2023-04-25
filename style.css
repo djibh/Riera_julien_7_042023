@@ -40,8 +40,17 @@ main {
   transform: translateY(-50%);
 }
 
+.tags-container {
+  margin-top: 1.5em;
+  text-align: left;
+}
+
+.tags-container .badge {
+  margin-right: 0.5em;
+}
+
 .filters.row {
-  margin: 2em 0;
+  margin: 1.5em 0;
 }
 
 .filters div {

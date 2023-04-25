@@ -1,4 +1,7 @@
-const $filterButtons = document.querySelectorAll(".filters .btn");
+import { createTagPill } from "./tags.js";
+
+const $tagsContainer = document.querySelector('.tags-container');
+const $filterButtons = document.querySelectorAll('.filters .btn');
 const $ingredientsListContainer = document.querySelector(".ingredients-filter__list");
 const $appliancesListContainer = document.querySelector(".appliances-filter__list");
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
@@ -30,6 +33,9 @@ function _buildIngredientsFilterItems(recipes) {
     ingredientItem.classList.add('filter-list__item');
     ingredientItem.innerText = ingredient;
     $ingredientsListContainer.appendChild(ingredientItem);
+    ingredientItem.addEventListener('click', function() {
+      addTagPillOnClick(this.innerText);
+    });
   });
 }
 
@@ -50,6 +56,9 @@ function _buildAppliancesFilterItems(recipes) {
     applianceItem.classList.add('filter-list__item');
     applianceItem.innerText = appliance;
     $appliancesListContainer.appendChild(applianceItem);
+    applianceItem.addEventListener('click', function() {
+      addTagPillOnClick(this.innerText);
+    });
   });
 }
 
@@ -73,6 +82,9 @@ function _buildUstensilsFilterItems(recipes) {
     ustensilItem.classList.add('filter-list__item');
     ustensilItem.innerText = ingredient;
     $ustensilsListContainer.appendChild(ustensilItem);
+    ustensilItem.addEventListener('click', function() {
+      addTagPillOnClick(this.innerText);
+    });
   });
 }
 
@@ -100,4 +112,15 @@ function _handleFilterButtonsBehaviour() {
       }
     });
   }
+}
+
+// call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
+function addTagPillOnClick(elementInnerText) {
+  const newTag = createTagPill(elementInnerText);
+  $tagsContainer.appendChild(newTag);
+
+  // Remove tag from container
+  newTag.addEventListener('click', function() {
+    this.remove();
+  });
 }
