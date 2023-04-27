@@ -1,36 +1,32 @@
+import { filtersSearch } from "./search.js";
 import { createTagPill } from "./tags.js";
 
 const $tagsContainer = document.querySelector('.tags-container');
 const $filterButtons = document.querySelectorAll('.filters .btn');
+const $ingredientsInput = document.getElementById('ingredients-dropdown');
+const $appliancesInput = document.getElementById('appliances-dropdown');
+const $ustensilsInput = document.getElementById('ustensils-dropdown');
 const $ingredientsListContainer = document.querySelector(".ingredients-filter__list");
 const $appliancesListContainer = document.querySelector(".appliances-filter__list");
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
+let filteredIngredients = [];
+
 export function buildFiltersContentItems(recipes) {
-  buildIngredientsFilterItems(recipes);
+  allIngredients(recipes);
+  buildIngredientsFilterItems(filteredIngredients);
   buildAppliancesFilterItems(recipes);
   buildUstensilsFilterItems(recipes);
   handleFilterButtonsBehaviour();
+
+  $ingredientsInput.addEventListener('focus', filtersSearch(filteredIngredients, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
 }
 
+
+
 // create ingredients li elements for filter buttons
-function buildIngredientsFilterItems(recipes) {
-  const allIngredients = (recipes) => {
-    let listOfIngredients = [];
-    recipes.forEach((recipe) => {
-      recipe.ingredients.forEach((ingredient) => {
-        const formattedIngredient = capitalize(ingredient.ingredient);
-        listOfIngredients.push(formattedIngredient);
-      });
-    });
-
-    // create an array with unique values
-    const ingredientsFilter = [...new Set(listOfIngredients)];
-    ingredientsFilter.sort();
-    return ingredientsFilter;
-  };
-
-  allIngredients(recipes).forEach((ingredient) => {
+function buildIngredientsFilterItems(ingredients) {
+  ingredients.forEach((ingredient) => {
     const ingredientItem = document.createElement("li");
     ingredientItem.classList.add('filter-list__item');
     ingredientItem.innerText = ingredient;
@@ -40,6 +36,22 @@ function buildIngredientsFilterItems(recipes) {
     });
   });
 }
+
+const allIngredients = (recipes) => {
+  let listOfIngredients = [];
+  recipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      const formattedIngredient = capitalize(ingredient.ingredient);
+      listOfIngredients.push(formattedIngredient);
+    });
+  });
+
+  // create an array with unique values
+  filteredIngredients = [...new Set(listOfIngredients)];
+  filteredIngredients.sort();
+
+  return filteredIngredients;
+};
 
 // create appliances li elements for filter buttons
 function buildAppliancesFilterItems(recipes) {

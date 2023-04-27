@@ -3,9 +3,7 @@ import { buildFiltersContentItems } from "./filter.js";
 import { search } from "./search.js";
 
 const bsRow = document.getElementById("recipes-grid");
-const mainSearchInput = document.getElementById("search-bar");
-
-let results = recipes;
+const $mainSearchInput = document.getElementById("search-bar");
 
 function init() {
   showRecipes(recipes);
@@ -14,8 +12,8 @@ function init() {
 
 init();
 
-mainSearchInput
-  .addEventListener("input", search(recipes, mainSearchInput, bsRow, results, showRecipes));
+$mainSearchInput
+  .addEventListener("focus", search(recipes, $mainSearchInput, bsRow, showRecipes));
 
 function showRecipes(recipesList) {
   recipesList.forEach((recipe) => {

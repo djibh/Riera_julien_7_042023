@@ -1,5 +1,45 @@
-export function search(dataSource, input, container, results, buildUiFunction) {
-  
+/**
+ * @param {[any]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
+ * @param {any} input User's input
+ * @param {HTMLElement} container This must be the parent element used to wrap results' UI elements
+ * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
+ */
+export function search(dataSource, input, container, buildUiFunction) {
+  input.addEventListener("input", () => {
+    const userInput = input.value.trim().toLowerCase();
+
+    // refresh recipes grid
+    container.innerHTML = "";
+
+    // check for input length
+    if (userInput.length < 3) {
+      buildUiFunction(dataSource);
+      return;
+    }
+
+    // fetch results from search and update recipes grid
+    const results = getMatchingResults(userInput);
+    buildUiFunction(results);
+  });
+
+  function getMatchingResults(input) {
+    //FIXME - add check in ingredients
+    return dataSource.filter(
+      (data) =>
+        data.name.toLowerCase().includes(input) ||
+        data.description.toLowerCase().includes(input)
+    );
+  }
+}
+
+/**
+ * @param {[any]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
+ * @param {any} input User's input
+ * @param {HTMLElement} container This must be the parent element used to wrap results' UI elements
+ * @param {[any]} results This array contains data remaining after the datasource filter
+ * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
+ */
+export function filtersSearch(dataSource, input, container, buildUiFunction) {
     input.addEventListener("input", () => {
       const userInput = input.value.trim().toLowerCase();
   
@@ -13,20 +53,17 @@ export function search(dataSource, input, container, results, buildUiFunction) {
       }
   
       // fetch results from search and update recipes grid
-      results = getMatchingResults(userInput);
+      const results = getMatchingResults(userInput);
       buildUiFunction(results);
     });
   
     function getMatchingResults(input) {
-      //FIXME - add check in ingredients
       return dataSource.filter(
         (data) =>
-          data.name.toLowerCase().includes(input) ||
-          data.description.toLowerCase().includes(input)
+          data.toLowerCase().includes(input)
       );
     }
   }
-
 
 // VERSION FUNCTIONAL PROGRAMMING
 // export function searchRecipes(recipes, grid) {
@@ -56,7 +93,6 @@ export function search(dataSource, input, container, results, buildUiFunction) {
 //     result.name.toLowerCase().includes(input)
 //   );
 // }
-
 
 // VERSION NATIVE FUNCTIONS PROGRAMMING
 // function getMatchingResults(query) {
@@ -88,7 +124,6 @@ export function search(dataSource, input, container, results, buildUiFunction) {
 //   }
 //   return false;
 // }
-
 
 //CHATGPT
 //
@@ -236,7 +271,6 @@ export function search(dataSource, input, container, results, buildUiFunction) {
 
 // renderTags();
 // renderRecipes(data);
-
 
 // AUTRE VERSION
 // const searchInput = document.getElementById("search-input");
