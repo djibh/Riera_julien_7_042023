@@ -1,59 +1,33 @@
 import { recipes } from "../data/recipes.js";
 import { buildFiltersContentItems } from "./filter.js";
+import { search } from "./search.js";
 
 const bsRow = document.getElementById("recipes-grid");
+const mainSearchInput = document.getElementById("search-bar");
+
 let results = recipes;
 
-showRecipes(recipes);
-searchRecipes();
-buildFiltersContentItems(recipes);
-
-function searchRecipes() {
-  const input = document.getElementById("search-bar");
-
-  input.addEventListener("input", () => {
-    const userInput = input.value.trim().toLowerCase();
-
-    // refresh recipes grid
-    bsRow.innerHTML = "";
-
-    // check for input length
-    if (userInput.length < 3) {
-      showRecipes(recipes);
-      return;
-    }
-
-    // fetch results from search and update recipes grid
-    results = getMatchingResults(userInput);
-    showRecipes(results);
-  });
-
-  function getMatchingResults(input) {
-    //FIXME - add check in ingredients
-    return recipes.filter(
-      (recipe) =>
-        recipe.name.toLowerCase().includes(input) ||
-        recipe.description.toLowerCase().includes(input)
-    );
-  }
+function init() {
+  showRecipes(recipes);
+  buildFiltersContentItems(recipes);
 }
 
-function filterByTags(recipesList) {
-  const ingredientTags = document.querySelectorAll('.ingredient-tag');
-  const applianceTags = document.querySelectorAll('.appliance-tag');
-  const ustensilTags = document.querySelectorAll('.ustensile-tag');
+init();
 
-  let filterredResults = [];
-
-
-}
+mainSearchInput
+  .addEventListener("input", search(recipes, mainSearchInput, bsRow, results, showRecipes));
 
 function showRecipes(recipesList) {
   recipesList.forEach((recipe) => {
     const ingredients = recipe.ingredients;
 
     const cardBsContainer = document.createElement("div");
-    cardBsContainer.classList.add('col-lg-4', 'col-md-6', 'card-container', 'gy-4');
+    cardBsContainer.classList.add(
+      "col-lg-4",
+      "col-md-6",
+      "card-container",
+      "gy-4"
+    );
     const recipeCard = document.createElement("article");
     recipeCard.classList.add("card");
     recipeCard.classList.add("recipe-card");

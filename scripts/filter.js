@@ -13,6 +13,7 @@ export function buildFiltersContentItems(recipes) {
   handleFilterButtonsBehaviour();
 }
 
+// create ingredients li elements for filter buttons
 function buildIngredientsFilterItems(recipes) {
   const allIngredients = (recipes) => {
     let listOfIngredients = [];
@@ -40,6 +41,7 @@ function buildIngredientsFilterItems(recipes) {
   });
 }
 
+// create appliances li elements for filter buttons
 function buildAppliancesFilterItems(recipes) {
   const allAppliances = (recipes) => {
     let listOfAppliances = [];
@@ -64,6 +66,8 @@ function buildAppliancesFilterItems(recipes) {
   });
 }
 
+
+// create ustensils li elements for filter buttons
 function buildUstensilsFilterItems(recipes) {
   const allUstensils = (recipes) => {
     let listOfUstensils = [];

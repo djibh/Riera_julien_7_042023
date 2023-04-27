@@ -155,10 +155,17 @@ main {
   transition: 100ms;
 }
 
+.filter-list__item:disabled {
+  pointer-events: none;
+  color: rgba(50, 50, 50, 0.7);
+}
+
 .filter-list__item:hover {
   padding-left: 4px;
   color: rgba(255, 255, 255, 0.7);
 }
+
+
 
 .btn.selected {
   max-width: 55%;

@@ -1,4 +1,31 @@
-// import { recipes } from "../data/recipes.js";
+export function search(dataSource, input, container, results, buildUiFunction) {
+  
+    input.addEventListener("input", () => {
+      const userInput = input.value.trim().toLowerCase();
+  
+      // refresh recipes grid
+      container.innerHTML = "";
+  
+      // check for input length
+      if (userInput.length < 3) {
+        buildUiFunction(dataSource);
+        return;
+      }
+  
+      // fetch results from search and update recipes grid
+      results = getMatchingResults(userInput);
+      buildUiFunction(results);
+    });
+  
+    function getMatchingResults(input) {
+      //FIXME - add check in ingredients
+      return dataSource.filter(
+        (data) =>
+          data.name.toLowerCase().includes(input) ||
+          data.description.toLowerCase().includes(input)
+      );
+    }
+  }
 
 
 // VERSION FUNCTIONAL PROGRAMMING
