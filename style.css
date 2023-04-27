@@ -8,9 +8,9 @@ header {
 }
 
 header h1 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 2rem;
-  color: #D04F4F;
+  color: #d04f4f;
 }
 
 main {
@@ -41,12 +41,14 @@ main {
 }
 
 .tags-container {
-  margin-top: 1.5em;
+  margin-top: 1em;
   text-align: left;
 }
 
 .tags-container .badge {
   margin-right: 0.5em;
+  margin-top: 1em;
+  cursor: pointer;
 }
 
 .filters.row {
@@ -73,25 +75,34 @@ main {
 
 .filters input {
   width: 100%;
+  height: 100%;
   background-color: transparent;
   color: white;
   border: none;
   outline: none;
+  cursor: pointer;
+}
+
+.filters input::placeholder {
+  color: white;
 }
 
 .filters div {
   position: relative;
 }
 
-.ingredients-filter__list {
+.ingredients-filter__list,
+.ingredient-tag {
   background-color: #3282f7;
 }
 
-.appliances-filter__list {
+.appliances-filter__list,
+.appliance-tag {
   background-color: #68d9a4;
 }
 
-.ustensils-filter__list {
+.ustensils-filter__list,
+.ustensil-tag {
   background-color: #ed6454;
 }
 
@@ -117,6 +128,15 @@ main {
   display: grid;
   max-height: 400px;
   opacity: 1;
+}
+
+.btn.btn .fa-chevron-down {
+  transform: rotateX(0deg);
+  transition: 250ms 100ms ease-out;
+}
+
+.btn.btn.selected .fa-chevron-down {
+  transform: rotate(180deg);
 }
 
 .filter-list__item {

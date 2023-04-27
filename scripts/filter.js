@@ -18,7 +18,8 @@ function _buildIngredientsFilterItems(recipes) {
     let listOfIngredients = [];
     recipes.forEach((recipe) => {
       recipe.ingredients.forEach((ingredient) => {
-        listOfIngredients.push(ingredient.ingredient.toLowerCase());
+        const formattedIngredient = capitalize(ingredient.ingredient);
+        listOfIngredients.push(formattedIngredient);
       });
     });
 
@@ -34,7 +35,7 @@ function _buildIngredientsFilterItems(recipes) {
     ingredientItem.innerText = ingredient;
     $ingredientsListContainer.appendChild(ingredientItem);
     ingredientItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText);
+      addTagPillOnClick(this.innerText, 'ingredient-tag');
     });
   });
 }
@@ -43,7 +44,8 @@ function _buildAppliancesFilterItems(recipes) {
   const allAppliances = (recipes) => {
     let listOfAppliances = [];
     recipes.forEach((recipe) => {
-      listOfAppliances.push(recipe.appliance.toLowerCase());
+      const formattedAppliance = capitalize(recipe.appliance);
+      listOfAppliances.push(formattedAppliance);
     });
 
     const appliancesFilter = [...new Set(listOfAppliances)];
@@ -57,7 +59,7 @@ function _buildAppliancesFilterItems(recipes) {
     applianceItem.innerText = appliance;
     $appliancesListContainer.appendChild(applianceItem);
     applianceItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText);
+      addTagPillOnClick(this.innerText, 'appliance-tag');
     });
   });
 }
@@ -67,7 +69,8 @@ function _buildUstensilsFilterItems(recipes) {
     let listOfUstensils = [];
     recipes.forEach((recipe) => {
       recipe.ustensils.forEach((ustensil) => {
-        listOfUstensils.push(ustensil.toLowerCase());
+        const formattedUstensil = capitalize(ustensil);
+        listOfUstensils.push(formattedUstensil);
       });
     });
   
@@ -83,7 +86,7 @@ function _buildUstensilsFilterItems(recipes) {
     ustensilItem.innerText = ingredient;
     $ustensilsListContainer.appendChild(ustensilItem);
     ustensilItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText);
+      addTagPillOnClick(this.innerText, 'ustensil-tag');
     });
   });
 }
@@ -92,9 +95,11 @@ function _buildUstensilsFilterItems(recipes) {
 function _handleFilterButtonsBehaviour() {
   $filterButtons.forEach((button) => {
     button.addEventListener("click", function() {
-      // remove selected class when already selected class is click again
+
+      // remove selected class when already selected class is click again and remove focus from input
       if (this.classList.contains("selected")) {
         this.classList.remove("selected");
+        removeFocus();
         return;
       }
 
@@ -115,12 +120,24 @@ function _handleFilterButtonsBehaviour() {
 }
 
 // call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
-function addTagPillOnClick(elementInnerText) {
+function addTagPillOnClick(elementInnerText, tagFamily) {
   const newTag = createTagPill(elementInnerText);
+  newTag.classList.add(tagFamily);
   $tagsContainer.appendChild(newTag);
 
   // Remove tag from container
   newTag.addEventListener('click', function() {
     this.remove();
   });
+}
+
+// takes a text in argument and return that text with first letter only to uppercase
+function capitalize(text) {
+  const uppercaseFirstLetter = text.charAt(0).toUpperCase();
+  const formattedText = uppercaseFirstLetter + text.slice(1).toLowerCase();
+  return formattedText;
+}
+
+function removeFocus() {
+  document.activeElement?.blur();
 }

@@ -2,7 +2,7 @@ import { recipes } from "../data/recipes.js";
 import { buildFiltersContentItems } from "./filter.js";
 
 const bsRow = document.getElementById("recipes-grid");
-let results = [];
+let results = recipes;
 
 showRecipes(recipes);
 searchRecipes();
@@ -36,6 +36,16 @@ function searchRecipes() {
         recipe.description.toLowerCase().includes(input)
     );
   }
+}
+
+function filterByTags(recipesList) {
+  const ingredientTags = document.querySelectorAll('.ingredient-tag');
+  const applianceTags = document.querySelectorAll('.appliance-tag');
+  const ustensilTags = document.querySelectorAll('.ustensile-tag');
+
+  let filterredResults = [];
+
+
 }
 
 function showRecipes(recipesList) {
