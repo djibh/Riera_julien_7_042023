@@ -7,13 +7,13 @@ const $appliancesListContainer = document.querySelector(".appliances-filter__lis
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
 export function buildFiltersContentItems(recipes) {
-  _buildIngredientsFilterItems(recipes);
-  _buildAppliancesFilterItems(recipes);
-  _buildUstensilsFilterItems(recipes);
-  _handleFilterButtonsBehaviour();
+  buildIngredientsFilterItems(recipes);
+  buildAppliancesFilterItems(recipes);
+  buildUstensilsFilterItems(recipes);
+  handleFilterButtonsBehaviour();
 }
 
-function _buildIngredientsFilterItems(recipes) {
+function buildIngredientsFilterItems(recipes) {
   const allIngredients = (recipes) => {
     let listOfIngredients = [];
     recipes.forEach((recipe) => {
@@ -40,7 +40,7 @@ function _buildIngredientsFilterItems(recipes) {
   });
 }
 
-function _buildAppliancesFilterItems(recipes) {
+function buildAppliancesFilterItems(recipes) {
   const allAppliances = (recipes) => {
     let listOfAppliances = [];
     recipes.forEach((recipe) => {
@@ -64,7 +64,7 @@ function _buildAppliancesFilterItems(recipes) {
   });
 }
 
-function _buildUstensilsFilterItems(recipes) {
+function buildUstensilsFilterItems(recipes) {
   const allUstensils = (recipes) => {
     let listOfUstensils = [];
     recipes.forEach((recipe) => {
@@ -80,10 +80,10 @@ function _buildUstensilsFilterItems(recipes) {
     return ustensilesFilter;
   };
 
-  allUstensils(recipes).forEach((ingredient) => {
+  allUstensils(recipes).forEach((ustensil) => {
     const ustensilItem = document.createElement("li");
     ustensilItem.classList.add('filter-list__item');
-    ustensilItem.innerText = ingredient;
+    ustensilItem.innerText = ustensil;
     $ustensilsListContainer.appendChild(ustensilItem);
     ustensilItem.addEventListener('click', function() {
       addTagPillOnClick(this.innerText, 'ustensil-tag');
@@ -92,7 +92,7 @@ function _buildUstensilsFilterItems(recipes) {
 }
 
 // manage filter buttons classes for UI modifications
-function _handleFilterButtonsBehaviour() {
+function handleFilterButtonsBehaviour() {
   $filterButtons.forEach((button) => {
     button.addEventListener("click", function() {
 
@@ -138,6 +138,7 @@ function capitalize(text) {
   return formattedText;
 }
 
+// remove keyboard focus on active element - used in filter inputs
 function removeFocus() {
   document.activeElement?.blur();
 }
