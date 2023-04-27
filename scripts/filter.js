@@ -11,18 +11,24 @@ const $appliancesListContainer = document.querySelector(".appliances-filter__lis
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
 let filteredIngredients = [];
+let filteredAppliances = [];
+let filteredUstensils = [];
 
 export function buildFiltersContentItems(recipes) {
   allIngredients(recipes);
+  allAppliances(recipes);
+  allUstensils(recipes);
+
   buildIngredientsFilterItems(filteredIngredients);
-  buildAppliancesFilterItems(recipes);
-  buildUstensilsFilterItems(recipes);
+  buildAppliancesFilterItems(filteredAppliances);
+  buildUstensilsFilterItems(filteredUstensils);
+
   handleFilterButtonsBehaviour();
 
   $ingredientsInput.addEventListener('focus', filtersSearch(filteredIngredients, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
+  $appliancesInput.addEventListener('focus', filtersSearch(filteredAppliances, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
+  $ustensilsInput.addEventListener('focus', filtersSearch(filteredUstensils, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
 }
-
-
 
 // create ingredients li elements for filter buttons
 function buildIngredientsFilterItems(ingredients) {
@@ -54,20 +60,8 @@ const allIngredients = (recipes) => {
 };
 
 // create appliances li elements for filter buttons
-function buildAppliancesFilterItems(recipes) {
-  const allAppliances = (recipes) => {
-    let listOfAppliances = [];
-    recipes.forEach((recipe) => {
-      const formattedAppliance = capitalize(recipe.appliance);
-      listOfAppliances.push(formattedAppliance);
-    });
-
-    const appliancesFilter = [...new Set(listOfAppliances)];
-    appliancesFilter.sort();
-    return appliancesFilter;
-  };
-
-  allAppliances(recipes).forEach((appliance) => {
+function buildAppliancesFilterItems(appliances) {
+    appliances.forEach((appliance) => {
     const applianceItem = document.createElement("li");
     applianceItem.classList.add('filter-list__item');
     applianceItem.innerText = appliance;
@@ -78,25 +72,21 @@ function buildAppliancesFilterItems(recipes) {
   });
 }
 
+const allAppliances = (recipes) => {
+  let listOfAppliances = [];
+  recipes.forEach((recipe) => {
+    const formattedAppliance = capitalize(recipe.appliance);
+    listOfAppliances.push(formattedAppliance);
+  });
+
+  filteredAppliances = [...new Set(listOfAppliances)];
+  filteredAppliances.sort();
+  return filteredAppliances;
+};
 
 // create ustensils li elements for filter buttons
-function buildUstensilsFilterItems(recipes) {
-  const allUstensils = (recipes) => {
-    let listOfUstensils = [];
-    recipes.forEach((recipe) => {
-      recipe.ustensils.forEach((ustensil) => {
-        const formattedUstensil = capitalize(ustensil);
-        listOfUstensils.push(formattedUstensil);
-      });
-    });
-  
-    // create an array with unique values
-    const ustensilesFilter = [...new Set(listOfUstensils)];
-    ustensilesFilter.sort();
-    return ustensilesFilter;
-  };
-
-  allUstensils(recipes).forEach((ustensil) => {
+function buildUstensilsFilterItems(ustensils) {
+  ustensils.forEach((ustensil) => {
     const ustensilItem = document.createElement("li");
     ustensilItem.classList.add('filter-list__item');
     ustensilItem.innerText = ustensil;
@@ -106,6 +96,21 @@ function buildUstensilsFilterItems(recipes) {
     });
   });
 }
+
+const allUstensils = (recipes) => {
+  let listOfUstensils = [];
+  recipes.forEach((recipe) => {
+    recipe.ustensils.forEach((ustensil) => {
+      const formattedUstensil = capitalize(ustensil);
+      listOfUstensils.push(formattedUstensil);
+    });
+  });
+
+  // create an array with unique values
+  filteredUstensils = [...new Set(listOfUstensils)];
+  filteredUstensils.sort();
+  return filteredUstensils;
+};
 
 // manage filter buttons classes for UI modifications
 function handleFilterButtonsBehaviour() {
