@@ -1,4 +1,4 @@
-import { filtersSearch } from "./search.js";
+import { search, filtersSearch } from "./search.js";
 import { createTagPill } from "./tags.js";
 
 const $tagsContainer = document.querySelector('.tags-container');
@@ -20,7 +20,7 @@ export function buildFiltersContentItems(recipes) {
   allUstensils(recipes);
 
   buildIngredientsFilterItems(filteredIngredients);
-  buildAppliancesFilterItems(filteredAppliances);
+  buildAppliancesFilterItems(filteredAppliances, recipes);
   buildUstensilsFilterItems(filteredUstensils);
 
   handleFilterButtonsBehaviour();
@@ -60,14 +60,15 @@ const allIngredients = (recipes) => {
 };
 
 // create appliances li elements for filter buttons
-function buildAppliancesFilterItems(appliances) {
+function buildAppliancesFilterItems(appliances, recipes) {
     appliances.forEach((appliance) => {
     const applianceItem = document.createElement("li");
     applianceItem.classList.add('filter-list__item');
     applianceItem.innerText = appliance;
     $appliancesListContainer.appendChild(applianceItem);
     applianceItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText, 'appliance-tag');
+      addTagPillOnClick(this.innerText, 'appliance-tag', recipes);
+      search(recipes);
     });
   });
 }
@@ -125,12 +126,12 @@ function handleFilterButtonsBehaviour() {
       }
 
       // Reduce size of other filters before increasing size of the new selected one
-      removeSelectedClassForfilterButtons();
+      removeSelectedClassForFilterButtons();
       this.classList.toggle("selected");
     });
   });
 
-  function removeSelectedClassForfilterButtons() {
+  function removeSelectedClassForFilterButtons() {
     $filterButtons.forEach((button) => {
       if (button.classList.contains("selected")) {
         button.classList.remove("selected");
@@ -141,7 +142,7 @@ function handleFilterButtonsBehaviour() {
 }
 
 // call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
-function addTagPillOnClick(elementInnerText, tagFamily) {
+function addTagPillOnClick(elementInnerText, tagFamily, recipes) {
   const newTag = createTagPill(elementInnerText);
   newTag.classList.add(tagFamily);
   $tagsContainer.appendChild(newTag);
@@ -149,6 +150,7 @@ function addTagPillOnClick(elementInnerText, tagFamily) {
   // Remove tag from container
   newTag.addEventListener('click', function() {
     this.remove();
+    search(recipes);
   });
 }
 

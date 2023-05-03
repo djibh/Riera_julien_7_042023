@@ -51,6 +51,10 @@ main {
   cursor: pointer;
 }
 
+.badge i {
+  padding-left: 8px;
+}
+
 .filters.row {
   margin: 1.5em 0;
 }
@@ -165,8 +169,6 @@ main {
   color: rgba(255, 255, 255, 0.7);
 }
 
-
-
 .btn.selected {
   max-width: 55%;
   /* overflow: auto; */
@@ -209,6 +211,11 @@ main {
   list-style-type: none;
   text-align: left;
   font-size: 0.75rem;
+}
+
+.recipes .container {
+  padding: 0;
+  padding-bottom: 1em;
 }
 
 .card .recipe-card__img {
