@@ -4,10 +4,12 @@ import { buildRecipesDOM } from "./recipeDom.js";
  * @param {[string|number]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
  */
 export function search(dataSource) {
-  const $bsRow = document.getElementById("recipes-grid");
-  const $mainSearchInput = document.getElementById("search-bar");
-  const $applianceTags = document.querySelectorAll(".appliance-tag");
-  const $tagsList = document.querySelectorAll(".badge");
+  const $bsRow = document.getElementById('recipes-grid');
+  const $mainSearchInput = document.getElementById('search-bar');
+  const $ingredientsTags = document.querySelectorAll('.ingredient-tag');
+  const $applianceTags = document.querySelectorAll('.appliance-tag');
+  const $ustensilsTags = document.querySelectorAll('.ustensil-tag');
+  const $tagsList = document.querySelectorAll('.badge');
 
   const userInput = $mainSearchInput.value.trim().toLowerCase();
 
@@ -21,7 +23,7 @@ export function search(dataSource) {
   }
 
   if (userInput.length < 3) {
-    dataSource = getFilteredResults(dataSource, $applianceTags);
+    dataSource = getFilteredResults(dataSource);
     buildRecipesDOM(dataSource);
     return;
   }
@@ -34,12 +36,12 @@ export function search(dataSource) {
   }
 
   if (!userInput) {
-    const filteredRecipes = getFilteredResults(dataSource, $applianceTags);
+    const filteredRecipes = getFilteredResults(dataSource);
     buildRecipesDOM(filteredRecipes);
     return;
   } else {
     dataSource = getMatchingResults(userInput);
-    const filteredRecipes = getFilteredResults(dataSource, $applianceTags);
+    const filteredRecipes = getFilteredResults(dataSource);
     buildRecipesDOM(filteredRecipes);
     return;
   }
@@ -55,22 +57,33 @@ export function search(dataSource) {
   }
 
   // check whether filters have been selected or not and change data source for UI result
-  function getFilteredResults(data, domTags) {
+  function getFilteredResults(data) {
+    let filteredRecipes = [];
+
     const appliancesList = [];
-    domTags.forEach((appliance) =>
+    $applianceTags.forEach((appliance) =>
       appliancesList.push(appliance.innerText.toLowerCase())
     );
 
-    return data.filter((recipe) =>
-      recipe.appliance.toLowerCase().includes(appliancesList[0])
-    );
+    const ustensilsList = [];
+    $ustensilsTags.forEach((ustensil) => 
+      ustensilsList.push(ustensil.innerText.toLowerCase()));
 
-    // return data.filter(
-    //   (recipe) =>
-    //   appliancesList.every((appliance) => {
-    //     recipe.appliance.includes(appliance);
-    //   })
-    // );
+    const filteredAppliances = data.filter((recipe) => {
+      return appliancesList.some(appliance => {
+        return recipe.appliance.toLowerCase().includes(appliance.toLowerCase());
+      });
+    });
+    filteredRecipes.push(...filteredAppliances);
+
+    const filteredUstentils = data.filter((recipe) => {
+      return ustensilsList.some(ustensil => {
+        return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil.toLowerCase()));
+      });
+    });
+    filteredRecipes.push(...filteredUstentils);
+
+    return filteredRecipes;
   }
 }
 

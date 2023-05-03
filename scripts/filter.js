@@ -21,7 +21,7 @@ export function buildFiltersContentItems(recipes) {
 
   buildIngredientsFilterItems(filteredIngredients);
   buildAppliancesFilterItems(filteredAppliances, recipes);
-  buildUstensilsFilterItems(filteredUstensils);
+  buildUstensilsFilterItems(filteredUstensils, recipes);
 
   handleFilterButtonsBehaviour();
 
@@ -86,14 +86,15 @@ const allAppliances = (recipes) => {
 };
 
 // create ustensils li elements for filter buttons
-function buildUstensilsFilterItems(ustensils) {
+function buildUstensilsFilterItems(ustensils, recipes) {
   ustensils.forEach((ustensil) => {
     const ustensilItem = document.createElement("li");
     ustensilItem.classList.add('filter-list__item');
     ustensilItem.innerText = ustensil;
     $ustensilsListContainer.appendChild(ustensilItem);
     ustensilItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText, 'ustensil-tag');
+      addTagPillOnClick(this.innerText, 'ustensil-tag', recipes);
+      search(recipes);
     });
   });
 }
