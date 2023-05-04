@@ -60,28 +60,40 @@ export function search(dataSource) {
   function getFilteredResults(data) {
     let filteredRecipes = [];
 
+    const ingredientsList = [];
+    $ingredientsTags.forEach(
+      ingredient => ingredientsList.push(ingredient.innerText.toLowerCase()));
+
     const appliancesList = [];
-    $applianceTags.forEach((appliance) =>
-      appliancesList.push(appliance.innerText.toLowerCase())
-    );
+    $applianceTags.forEach(
+      appliance => appliancesList.push(appliance.innerText.toLowerCase()));
 
     const ustensilsList = [];
-    $ustensilsTags.forEach((ustensil) => 
-      ustensilsList.push(ustensil.innerText.toLowerCase()));
+    $ustensilsTags.forEach(
+      ustensil => ustensilsList.push(ustensil.innerText.toLowerCase()));
+
+    const filteredIngredients = data.filter((recipe) => {
+      return ingredientsList.some(ingredient => {
+        return recipe.ingredients.some(recipeIng => recipeIng.ingredient.toLowerCase().includes(ingredient));
+      });
+    });
+    filteredRecipes.push(...filteredIngredients);
 
     const filteredAppliances = data.filter((recipe) => {
       return appliancesList.some(appliance => {
-        return recipe.appliance.toLowerCase().includes(appliance.toLowerCase());
+        return recipe.appliance.toLowerCase().includes(appliance);
       });
     });
     filteredRecipes.push(...filteredAppliances);
 
     const filteredUstentils = data.filter((recipe) => {
       return ustensilsList.some(ustensil => {
-        return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil.toLowerCase()));
+        return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil));
       });
     });
     filteredRecipes.push(...filteredUstentils);
+
+
 
     return filteredRecipes;
   }
