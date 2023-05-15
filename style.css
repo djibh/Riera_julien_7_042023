@@ -14,7 +14,7 @@ header h1 {
 }
 
 main {
-  max-width: 1200px;
+  max-width: 1300px;
   padding: 0 2em;
   margin: auto;
   text-align: center;
@@ -159,19 +159,19 @@ main {
   transition: 100ms;
 }
 
-.filter-list__item:disabled {
-  pointer-events: none;
-  color: rgba(50, 50, 50, 0.7);
-}
-
 .filter-list__item:hover {
   padding-left: 4px;
   color: rgba(255, 255, 255, 0.7);
 }
 
+.filter-list__item.disabled {
+  pointer-events: none;
+  cursor: none;
+  color: rgba(240, 240, 240, 0.7);
+}
+
 .btn.selected {
   max-width: 55%;
-  /* overflow: auto; */
 }
 
 .btn.ingredients-filter {
@@ -199,19 +199,19 @@ main {
 }
 
 .card.recipe-card {
-  height: 25em;
+  height: 23em;
+  width: 24em;
   background-color: #e7e7e7;
   border-radius: 5px;
   border: none;
   font-family: "Lato", sans-serif;
-  transform: 300ms;
 }
 
 .ingredients-list {
   padding: 0;
   list-style-type: none;
   text-align: left;
-  font-size: 0.75rem;
+  font-size: 12px;
 }
 
 .recipes .container {
@@ -220,7 +220,7 @@ main {
 }
 
 .card .recipe-card__img {
-  height: 12em;
+  height: 50%;
   background-color: #c7bebe;
   align-self: center;
 }
@@ -228,4 +228,36 @@ main {
 .recipe-card__title {
   font-size: 0.9rem;
   text-align: left;
+  margin-bottom: 16px;
 }
+
+.recipe-card__duration {
+  position: relative;
+  text-align: right;
+}
+
+.recipe-card__duration::before {
+  position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  content: '\f017';
+  left: 50px;
+  top: 0px;
+
+}
+
+.card .card-body {
+  height: 50%;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+}
+
+.col.card__description-text {
+  text-align: left;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  max-lines: 6;
+}
+

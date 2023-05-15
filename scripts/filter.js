@@ -39,6 +39,7 @@ function buildIngredientsFilterItems(ingredients, recipes) {
     $ingredientsListContainer.appendChild(ingredientItem);
     ingredientItem.addEventListener('click', function() {
       addTagPillOnClick(this.innerText, 'ingredient-tag', recipes);
+      setDisableClass(this);
       search(recipes);
     });
   });
@@ -69,9 +70,12 @@ function buildAppliancesFilterItems(appliances, recipes) {
     $appliancesListContainer.appendChild(applianceItem);
     applianceItem.addEventListener('click', function() {
       addTagPillOnClick(this.innerText, 'appliance-tag', recipes);
+      setDisableClass(this);
       search(recipes);
     });
   });
+
+  
 }
 
 const allAppliances = (recipes) => {
@@ -95,6 +99,7 @@ function buildUstensilsFilterItems(ustensils, recipes) {
     $ustensilsListContainer.appendChild(ustensilItem);
     ustensilItem.addEventListener('click', function() {
       addTagPillOnClick(this.innerText, 'ustensil-tag', recipes);
+      setDisableClass(this);
       search(recipes);
     });
   });
@@ -146,11 +151,14 @@ function handleFilterButtonsBehaviour() {
 // call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
 function addTagPillOnClick(elementInnerText, tagFamily, recipes) {
   const newTag = createTagPill(elementInnerText);
+
   newTag.classList.add(tagFamily);
   $tagsContainer.appendChild(newTag);
 
   // Remove tag from container
   newTag.addEventListener('click', function() {
+    const itemToRemoveDisableFrom = document.getElementById(this.dataset.idSelected);
+    itemToRemoveDisableFrom.classList.remove('disabled');
     this.remove();
     search(recipes);
   });
@@ -161,6 +169,13 @@ function capitalize(text) {
   const uppercaseFirstLetter = text.charAt(0).toUpperCase();
   const formattedText = uppercaseFirstLetter + text.slice(1).toLowerCase();
   return formattedText;
+}
+
+// adds 'disable' class to li elements in filter dropdowns
+function setDisableClass(filterItem) {
+  const filterItemText = filterItem.innerText.toLowerCase();
+  filterItem.setAttribute('id', `${filterItemText}-selected`);
+  filterItem.classList.add('disabled');
 }
 
 // remove keyboard focus on active element - used in filter inputs

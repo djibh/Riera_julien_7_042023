@@ -52,7 +52,8 @@ export function search(dataSource) {
     return dataSource.filter(
       (recipe) =>
         recipe.name.toLowerCase().includes(input) ||
-        recipe.description.toLowerCase().includes(input)
+        recipe.description.toLowerCase().includes(input) ||
+        recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(input))
     );
   }
 
