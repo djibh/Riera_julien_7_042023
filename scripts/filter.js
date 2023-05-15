@@ -142,7 +142,6 @@ function handleFilterButtonsBehaviour() {
     $filterButtons.forEach((button) => {
       if (button.classList.contains("selected")) {
         button.classList.remove("selected");
-        return;
       }
     });
   }

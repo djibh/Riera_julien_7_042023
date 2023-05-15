@@ -48,7 +48,6 @@ export function search(dataSource) {
 
   // filters recipes with matching user input from dataSource
   function getMatchingResults(input) {
-    //FIXME - add check in ingredients
     return dataSource.filter(
       (recipe) =>
         recipe.name.toLowerCase().includes(input) ||

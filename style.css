@@ -69,6 +69,7 @@ main {
 
 .filters div {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
   border: none;
@@ -89,10 +90,6 @@ main {
 
 .filters input::placeholder {
   color: white;
-}
-
-.filters div {
-  position: relative;
 }
 
 .ingredients-filter__list,
