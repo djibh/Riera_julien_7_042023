@@ -10,7 +10,7 @@ function init() {
   buildFiltersContentItems(recipes);
   search(recipes);
 
-  $mainSearchInput.addEventListener('input', () => {search(recipes);});
+  $mainSearchInput.addEventListener('input', () => { search(recipes); });
 }
 
 init();

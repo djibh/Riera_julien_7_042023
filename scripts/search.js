@@ -35,6 +35,7 @@ export function search(dataSource) {
     return;
   }
 
+  // check whether we have an user input in search bar before filtering data
   if (!userInput) {
     const filteredRecipes = getFilteredResults(dataSource);
     buildRecipesDOM(filteredRecipes);
@@ -93,8 +94,6 @@ export function search(dataSource) {
     });
     filteredRecipes.push(...filteredUstentils);
 
-
-
     return filteredRecipes;
   }
 }
@@ -105,7 +104,11 @@ export function search(dataSource) {
  * @param {HTMLElement} container This must be the parent element used to wrap results' UI elements
  * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
  */
-export function filtersSearch(dataSource, input, container, buildUiFunction) {
+export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
+
+  container.innerHTML = "";
+  buildUiFunction(dataSource, recipes);
+  
   input.addEventListener("input", () => {
     const userInput = input.value.trim().toLowerCase();
 
@@ -113,14 +116,14 @@ export function filtersSearch(dataSource, input, container, buildUiFunction) {
     container.innerHTML = "";
 
     // check for input length
-    if (userInput.length < 3) {
-      buildUiFunction(dataSource);
+    if (userInput.length < 1) {
+      buildUiFunction(dataSource, recipes);
       return;
     }
 
     // fetch results from search and update recipes grid
     const results = getMatchingResults(userInput);
-    buildUiFunction(results);
+    buildUiFunction(results, recipes);
   });
 
   function getMatchingResults(input) {

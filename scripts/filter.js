@@ -25,23 +25,25 @@ export function buildFiltersContentItems(recipes) {
 
   handleFilterButtonsBehaviour();
 
-  $ingredientsInput.addEventListener('focus', filtersSearch(filteredIngredients, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
-  $appliancesInput.addEventListener('focus', filtersSearch(filteredAppliances, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
-  $ustensilsInput.addEventListener('focus', filtersSearch(filteredUstensils, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
+  $ingredientsInput.addEventListener('focus', () => filtersSearch(filteredIngredients, recipes, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
+  $appliancesInput.addEventListener('focus', () => filtersSearch(filteredAppliances, recipes, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
+  $ustensilsInput.addEventListener('focus', () => filtersSearch(filteredUstensils, recipes, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
 }
 
 // create ingredients li elements for filter buttons
 function buildIngredientsFilterItems(ingredients, recipes) {
+  const tagsList = document.querySelectorAll('.badge');
   ingredients.forEach((ingredient) => {
     const ingredientItem = document.createElement("li");
+    ingredientItem.setAttribute('id', `ingredient-${ingredient.toLowerCase().replace(/\s/g, '')}`);
     ingredientItem.classList.add('filter-list__item');
     ingredientItem.innerText = ingredient;
     $ingredientsListContainer.appendChild(ingredientItem);
-    ingredientItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText, 'ingredient-tag', recipes);
-      setDisableClass(this);
-      search(recipes);
-    });
+
+    filterItemIsSelected(tagsList, ingredientItem);
+
+    // create tag pill on click and disable selected item click in list
+    setDisableOnClick(ingredientItem, $ingredientsInput, 'ingredient-tag', recipes);
   });
 }
 
@@ -63,19 +65,20 @@ const allIngredients = (recipes) => {
 
 // create appliances li elements for filter buttons
 function buildAppliancesFilterItems(appliances, recipes) {
-    appliances.forEach((appliance) => {
+  const tagsList = document.querySelectorAll('.badge');
+
+  appliances.forEach((appliance) => {
     const applianceItem = document.createElement("li");
+    applianceItem.setAttribute('id', `appliance-${appliance.toLowerCase().replace(/\s/g, '')}`);
     applianceItem.classList.add('filter-list__item');
     applianceItem.innerText = appliance;
     $appliancesListContainer.appendChild(applianceItem);
-    applianceItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText, 'appliance-tag', recipes);
-      setDisableClass(this);
-      search(recipes);
-    });
-  });
 
-  
+    filterItemIsSelected(tagsList, applianceItem);
+
+    // create tag pill on click and disable selected item click in list
+    setDisableOnClick(applianceItem, $appliancesInput, 'appliance-tag', recipes);
+  });
 }
 
 const allAppliances = (recipes) => {
@@ -92,16 +95,17 @@ const allAppliances = (recipes) => {
 
 // create ustensils li elements for filter buttons
 function buildUstensilsFilterItems(ustensils, recipes) {
+  const tagsList = document.querySelectorAll('.badge');
   ustensils.forEach((ustensil) => {
     const ustensilItem = document.createElement("li");
+    ustensilItem.setAttribute('id', `ustensil-${ustensil.toLowerCase().replace(/\s/g, '')}`);
     ustensilItem.classList.add('filter-list__item');
     ustensilItem.innerText = ustensil;
     $ustensilsListContainer.appendChild(ustensilItem);
-    ustensilItem.addEventListener('click', function() {
-      addTagPillOnClick(this.innerText, 'ustensil-tag', recipes);
-      setDisableClass(this);
-      search(recipes);
-    });
+
+    filterItemIsSelected(tagsList, ustensilItem);
+    
+    setDisableOnClick(ustensilItem, $ustensilsInput, 'ustensil-tag', recipes);
   });
 }
 
@@ -120,7 +124,7 @@ const allUstensils = (recipes) => {
   return filteredUstensils;
 };
 
-// manage filter buttons classes for UI modifications
+// manage filter buttons classes for UI modifications via CSS
 function handleFilterButtonsBehaviour() {
   $filterButtons.forEach((button) => {
     button.addEventListener("click", function() {
@@ -148,8 +152,8 @@ function handleFilterButtonsBehaviour() {
 }
 
 // call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
-function addTagPillOnClick(elementInnerText, tagFamily, recipes) {
-  const newTag = createTagPill(elementInnerText);
+function addTagPillOnClick(element, tagFamily, recipes) {
+  const newTag = createTagPill(element);
 
   newTag.classList.add(tagFamily);
   $tagsContainer.appendChild(newTag);
@@ -170,14 +174,29 @@ function capitalize(text) {
   return formattedText;
 }
 
-// adds 'disable' class to li elements in filter dropdowns
-function setDisableClass(filterItem) {
-  const filterItemText = filterItem.innerText.toLowerCase();
-  filterItem.setAttribute('id', `${filterItemText}-selected`);
-  filterItem.classList.add('disabled');
-}
-
 // remove keyboard focus on active element - used in filter inputs
 function removeFocus() {
   document.activeElement?.blur();
+}
+
+// checks if a filter list item is in tags in order to add class disabled on list regeneration (i.e. focus event in filter inputs)
+function filterItemIsSelected(tags, item) {
+  let attributesList = [];
+  tags.forEach(tag => attributesList.push(tag.dataset.idSelected));
+
+  if (attributesList.includes(item.id)) {
+    item.classList.add('disabled');
+    return;
+  }
+  return false;
+}
+
+// create tag pill on click and disable selected item click in list
+function setDisableOnClick(item, filterInput, filterCategory, recipes) {
+  item.addEventListener('click', function() {
+    addTagPillOnClick(this, filterCategory, recipes);
+    filterInput.value = '';
+    this.classList.add('disabled');
+    search(recipes);
+  });
 }
