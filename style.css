@@ -140,12 +140,12 @@ main {
 }
 
 .btn.btn .fa-chevron-down {
-  transform: rotateX(0deg);
+  transform: rotateZ(0deg);
   transition: 250ms 100ms ease-out;
 }
 
 .btn.btn.selected .fa-chevron-down {
-  transform: rotate(180deg);
+  transform: rotateZ(180deg);
 }
 
 .filter-list__item {
@@ -216,8 +216,14 @@ main {
   padding-bottom: 1em;
 }
 
-.card .recipe-card__img {
+.card .card-img-top {
   height: 50%;
+  background-color: #c7bebe;
+  align-self: center;
+}
+
+.card .recipe-card__img {
+  object-fit: contain;
   background-color: #c7bebe;
   align-self: center;
 }
@@ -235,11 +241,11 @@ main {
 
 .recipe-card__duration::before {
   position: absolute;
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Free';
   content: '\f017';
-  left: 50px;
+  left: 100px;
   top: 0px;
-
+  font-weight: 500;
 }
 
 .card .card-body {
@@ -250,7 +256,7 @@ main {
 }
 
 .col.card__description-text {
-  text-align: left;
+  text-align: justify;
   font-size: 12px;
   overflow: hidden;
   white-space: normal;

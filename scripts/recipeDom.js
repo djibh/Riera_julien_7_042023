@@ -22,6 +22,8 @@ export function buildRecipesDOM(recipesList) {
     recipeCard.classList.add("card");
     recipeCard.classList.add("recipe-card");
     const img = document.createElement("img");
+    img.setAttribute('src', '../assets/logo.png');
+    img.setAttribute('alt', 'Logo du site Les Petits Plats');
     img.classList.add("recipe-card__img");
     img.classList.add("card-img-top");
     recipeCard.appendChild(img);
@@ -34,10 +36,10 @@ export function buildRecipesDOM(recipesList) {
 
     const time = document.createElement("strong");
     time.classList.add('col', 'recipe-card__duration');
-    const clock = document.createElement("i");
-    clock.classList.add("fa-sharp", "fa-regular", "fa-clock");
+    // const clock = document.createElement("i");
+    // clock.classList.add("fa-sharp", "fa-regular", "fa-clock");
     time.innerText = `${recipe.time} min `;
-    time.appendChild(clock);
+    // time.appendChild(clock);
 
     const cardBodyHeader = document.createElement('div');
     cardBodyHeader.classList.add('row');
