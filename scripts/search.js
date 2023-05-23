@@ -60,39 +60,50 @@ export function search(dataSource) {
   // check whether filters have been selected or not and change data source for UI result
   function getFilteredResults(data) {
     let filteredRecipes = [];
+    let tags = {
+      "ingredients": [],
+      "appliances": [],
+      "ustentils": []
+    };
 
-    const ingredientsList = [];
-    $ingredientsTags.forEach(
-      ingredient => ingredientsList.push(ingredient.innerText.toLowerCase()));
-
-    const appliancesList = [];
-    $applianceTags.forEach(
-      appliance => appliancesList.push(appliance.innerText.toLowerCase()));
-
-    const ustensilsList = [];
-    $ustensilsTags.forEach(
-      ustensil => ustensilsList.push(ustensil.innerText.toLowerCase()));
-
-    const filteredIngredients = data.filter((recipe) => {
-      return ingredientsList.some(ingredient => {
-        return recipe.ingredients.some(recipeIng => recipeIng.ingredient.toLowerCase().includes(ingredient));
+    // fill in tags objects according to tags found in DOM
+    $ingredientsTags.forEach(ingredient => tags.ingredients.push(ingredient.innerText.toLowerCase()));
+    $applianceTags.forEach(appliance => tags.appliances.push(appliance.innerText.toLowerCase()));
+    $ustensilsTags.forEach(ustensil => tags.ustentils.push(ustensil.innerText.toLowerCase()));
+    
+    // ingredients based filter
+    if (tags.ingredients.length > 0) {
+      const filteredIngredients = data.filter((recipe) => {
+        return tags.ingredients.every(ingredient => {
+          return recipe.ingredients.some(recipeIng => recipeIng.ingredient.toLowerCase().includes(ingredient));
+        });
       });
-    });
-    filteredRecipes.push(...filteredIngredients);
+      filteredRecipes.push(...filteredIngredients);
+    } else {
+      return filteredRecipes = data;
+    }
 
-    const filteredAppliances = data.filter((recipe) => {
-      return appliancesList.some(appliance => {
-        return recipe.appliance.toLowerCase().includes(appliance);
+    // appliances based filter
+    if (tags.appliances.length > 0) {
+      const filteredAppliances = filteredRecipes.filter((recipe) => {
+        return tags.appliances.some(appliance => {
+          return recipe.appliance.toLowerCase().includes(appliance);
+        });
       });
-    });
-    filteredRecipes.push(...filteredAppliances);
-
-    const filteredUstentils = data.filter((recipe) => {
-      return ustensilsList.some(ustensil => {
-        return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil));
+      filteredRecipes = [];
+      filteredRecipes.push(...filteredAppliances);
+    }
+   
+    // ustensils based filter
+    if (tags.ustentils.length > 0) {
+      const filteredUstentils = filteredRecipes.filter((recipe) => {
+        return tags.ustentils.some(ustensil => {
+          return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil));
+        });
       });
-    });
-    filteredRecipes.push(...filteredUstentils);
+      filteredRecipes = [];
+      filteredRecipes.push(...filteredUstentils);
+    }
 
     return filteredRecipes;
   }
