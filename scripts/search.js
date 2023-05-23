@@ -80,13 +80,13 @@ export function search(dataSource) {
       });
       filteredRecipes.push(...filteredIngredients);
     } else {
-      return filteredRecipes = data;
+      filteredRecipes = data;
     }
 
     // appliances based filter
     if (tags.appliances.length > 0) {
       const filteredAppliances = filteredRecipes.filter((recipe) => {
-        return tags.appliances.some(appliance => {
+        return tags.appliances.every(appliance => {
           return recipe.appliance.toLowerCase().includes(appliance);
         });
       });
@@ -97,7 +97,7 @@ export function search(dataSource) {
     // ustensils based filter
     if (tags.ustentils.length > 0) {
       const filteredUstentils = filteredRecipes.filter((recipe) => {
-        return tags.ustentils.some(ustensil => {
+        return tags.ustentils.every(ustensil => {
           return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil));
         });
       });
