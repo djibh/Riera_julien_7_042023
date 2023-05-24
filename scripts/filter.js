@@ -1,6 +1,7 @@
-import { capitalize } from "../utils/capitalize.js";
 import { search, filtersSearch, updateFilterItemsList } from "./search.js";
 import { createTagPill } from "./tags.js";
+import { removeFocus } from "./utils/removeFocus.js";
+import { capitalize } from "./utils/capitalize.js";
 
 const $tagsContainer = document.querySelector('.tags-container');
 const $filterButtons = document.querySelectorAll('.filters .btn');
@@ -12,7 +13,6 @@ const $appliancesListContainer = document.querySelector(".appliances-filter__lis
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
 let { ingredients, appliances, ustensils } = updateFilterItemsList;
-
 
 export function buildFiltersContentItems(recipes) {
   console.log(ingredients);
@@ -165,11 +165,6 @@ function addTagPillOnClick(element, tagFamily, recipes) {
     this.remove();
     search(recipes);
   });
-}
-
-// remove keyboard focus on active element - used in filter inputs
-function removeFocus() {
-  document.activeElement?.blur();
 }
 
 // checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)

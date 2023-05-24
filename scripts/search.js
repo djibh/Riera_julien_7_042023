@@ -1,4 +1,4 @@
-import { capitalize } from "../utils/capitalize.js";
+import { capitalize } from "./utils/capitalize.js";
 import { buildRecipesDOM } from "./recipeDom.js";
 
 let filteredRecipes = [];
