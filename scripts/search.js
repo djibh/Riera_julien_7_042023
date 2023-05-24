@@ -1,15 +1,18 @@
+import { capitalize } from "../utils/capitalize.js";
 import { buildRecipesDOM } from "./recipeDom.js";
+
+let filteredRecipes = [];
 
 /**
  * @param {[string|number]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
  */
 export function search(dataSource) {
-  const $bsRow = document.getElementById('recipes-grid');
-  const $mainSearchInput = document.getElementById('search-bar');
-  const $ingredientsTags = document.querySelectorAll('.ingredient-tag');
-  const $applianceTags = document.querySelectorAll('.appliance-tag');
-  const $ustensilsTags = document.querySelectorAll('.ustensil-tag');
-  const $tagsList = document.querySelectorAll('.badge');
+  const $bsRow = document.getElementById("recipes-grid");
+  const $mainSearchInput = document.getElementById("search-bar");
+  const $ingredientsTags = document.querySelectorAll(".ingredient-tag");
+  const $applianceTags = document.querySelectorAll(".appliance-tag");
+  const $ustensilsTags = document.querySelectorAll(".ustensil-tag");
+  const $tagsList = document.querySelectorAll(".badge");
 
   const userInput = $mainSearchInput.value.trim().toLowerCase();
 
@@ -53,29 +56,40 @@ export function search(dataSource) {
       (recipe) =>
         recipe.name.toLowerCase().includes(input) ||
         recipe.description.toLowerCase().includes(input) ||
-        recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(input))
+        recipe.ingredients.some((ingredient) =>
+          ingredient.ingredient.toLowerCase().includes(input)
+        )
     );
   }
 
   // check whether filters have been selected or not and change data source for UI result
   function getFilteredResults(data) {
-    let filteredRecipes = [];
+    filteredRecipes = [];
+
     let tags = {
-      "ingredients": [],
-      "appliances": [],
-      "ustentils": []
+      ingredients: [],
+      appliances: [],
+      ustentils: [],
     };
 
     // fill in tags objects according to tags found in DOM
-    $ingredientsTags.forEach(ingredient => tags.ingredients.push(ingredient.innerText.toLowerCase()));
-    $applianceTags.forEach(appliance => tags.appliances.push(appliance.innerText.toLowerCase()));
-    $ustensilsTags.forEach(ustensil => tags.ustentils.push(ustensil.innerText.toLowerCase()));
-    
+    $ingredientsTags.forEach((ingredient) =>
+      tags.ingredients.push(ingredient.innerText.toLowerCase())
+    );
+    $applianceTags.forEach((appliance) =>
+      tags.appliances.push(appliance.innerText.toLowerCase())
+    );
+    $ustensilsTags.forEach((ustensil) =>
+      tags.ustentils.push(ustensil.innerText.toLowerCase())
+    );
+
     // ingredients based filter
     if (tags.ingredients.length > 0) {
       const filteredIngredients = data.filter((recipe) => {
-        return tags.ingredients.every(ingredient => {
-          return recipe.ingredients.some(recipeIng => recipeIng.ingredient.toLowerCase().includes(ingredient));
+        return tags.ingredients.every((ingredient) => {
+          return recipe.ingredients.some((recipeIng) =>
+            recipeIng.ingredient.toLowerCase().includes(ingredient)
+          );
         });
       });
       filteredRecipes.push(...filteredIngredients);
@@ -86,19 +100,21 @@ export function search(dataSource) {
     // appliances based filter
     if (tags.appliances.length > 0) {
       const filteredAppliances = filteredRecipes.filter((recipe) => {
-        return tags.appliances.every(appliance => {
+        return tags.appliances.every((appliance) => {
           return recipe.appliance.toLowerCase().includes(appliance);
         });
       });
       filteredRecipes = [];
       filteredRecipes.push(...filteredAppliances);
     }
-   
+
     // ustensils based filter
     if (tags.ustentils.length > 0) {
       const filteredUstentils = filteredRecipes.filter((recipe) => {
-        return tags.ustentils.every(ustensil => {
-          return recipe.ustensils.some(recipeUst => recipeUst.toLowerCase().includes(ustensil));
+        return tags.ustentils.every((ustensil) => {
+          return recipe.ustensils.some((recipeUst) =>
+            recipeUst.toLowerCase().includes(ustensil)
+          );
         });
       });
       filteredRecipes = [];
@@ -116,10 +132,31 @@ export function search(dataSource) {
  * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
  */
 export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
-
   container.innerHTML = "";
+  const { ingredients, appliances, ustensils } = updateFilterItemsList();
+
+  switch (document.activeElement.id) {
+    case "ingredients-dropdown":
+      if (filteredRecipes.length > 0) {
+        dataSource = ingredients;
+      }
+      break;
+    case "appliances-dropdown":
+      if (filteredRecipes.length > 0) {
+        dataSource = appliances;
+      }
+      break;
+    case "ustensils-dropdown":
+      if (filteredRecipes.length > 0) {
+        dataSource = ustensils;
+      }
+      break;
+  }
+
+  filteredRecipes = [];
+  search(recipes);
   buildUiFunction(dataSource, recipes);
-  
+
   input.addEventListener("input", () => {
     const userInput = input.value.trim().toLowerCase();
 
@@ -140,4 +177,50 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
   function getMatchingResults(input) {
     return dataSource.filter((data) => data.toLowerCase().includes(input));
   }
+}
+
+export function updateFilterItemsList() {
+  // get unique values for ingredients list, using filtered recipes
+
+  // list of ingredients
+  let listOfIngredients = [];
+  filteredRecipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      const formattedIngredient = capitalize(ingredient.ingredient);
+      listOfIngredients.push(formattedIngredient);
+    });
+  });
+
+  // create an array with unique values
+  const filteredIngredients = [...new Set(listOfIngredients)];
+  filteredIngredients.sort();
+
+  // list of appliances
+  let appliances = [];
+  filteredRecipes.forEach((recipe) => {
+    const formattedAppliance = capitalize(recipe.appliance);
+    appliances.push(formattedAppliance);
+  });
+
+  const filteredAppliances = [...new Set(appliances)];
+  filteredAppliances.sort();
+
+  // list of appliances
+  let listOfUstensils = [];
+  filteredRecipes.forEach((recipe) => {
+    recipe.ustensils.forEach((ustensil) => {
+      const formattedUstensil = capitalize(ustensil);
+      listOfUstensils.push(formattedUstensil);
+    });
+  });
+
+  // create an array with unique values
+  const filteredUstensils = [...new Set(listOfUstensils)];
+  filteredUstensils.sort();
+
+  return {
+    ingredients: [...filteredIngredients],
+    appliances: [...filteredAppliances],
+    ustensils: [...filteredUstensils]
+  };
 }

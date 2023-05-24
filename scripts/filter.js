@@ -1,4 +1,5 @@
-import { search, filtersSearch } from "./search.js";
+import { capitalize } from "../utils/capitalize.js";
+import { search, filtersSearch, updateFilterItemsList } from "./search.js";
 import { createTagPill } from "./tags.js";
 
 const $tagsContainer = document.querySelector('.tags-container');
@@ -10,24 +11,22 @@ const $ingredientsListContainer = document.querySelector(".ingredients-filter__l
 const $appliancesListContainer = document.querySelector(".appliances-filter__list");
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
-let filteredIngredients = [];
-let filteredAppliances = [];
-let filteredUstensils = [];
+let { ingredients, appliances, ustensils } = updateFilterItemsList();
 
 export function buildFiltersContentItems(recipes) {
   allIngredients(recipes);
   allAppliances(recipes);
   allUstensils(recipes);
 
-  buildIngredientsFilterItems(filteredIngredients, recipes);
-  buildAppliancesFilterItems(filteredAppliances, recipes);
-  buildUstensilsFilterItems(filteredUstensils, recipes);
+  buildIngredientsFilterItems(ingredients, recipes);
+  buildAppliancesFilterItems(appliances, recipes);
+  buildUstensilsFilterItems(ustensils, recipes);
 
   handleFilterButtonsBehaviour();
 
-  $ingredientsInput.addEventListener('focus', () => filtersSearch(filteredIngredients, recipes, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
-  $appliancesInput.addEventListener('focus', () => filtersSearch(filteredAppliances, recipes, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
-  $ustensilsInput.addEventListener('focus', () => filtersSearch(filteredUstensils, recipes, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
+  $ingredientsInput.addEventListener('focus', () => filtersSearch(ingredients, recipes, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
+  $appliancesInput.addEventListener('focus', () => filtersSearch(appliances, recipes, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
+  $ustensilsInput.addEventListener('focus', () => filtersSearch(ustensils, recipes, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
 }
 
 // create ingredients li elements for filter buttons
@@ -35,17 +34,48 @@ function buildIngredientsFilterItems(ingredients, recipes) {
   const tagsList = document.querySelectorAll('.badge');
   ingredients.forEach((ingredient) => {
     const ingredientItem = document.createElement("li");
-    ingredientItem.setAttribute('id', `ingredient-${ingredient.toLowerCase().replace(/\s/g, '')}`);
+    ingredientItem.setAttribute('id', `ingredient-${ingredient.toLowerCase().replace(/\s/g, '')}`); // creates id with item text w/o spaces
     ingredientItem.classList.add('filter-list__item');
     ingredientItem.innerText = ingredient;
     $ingredientsListContainer.appendChild(ingredientItem);
 
     filterItemIsSelected(tagsList, ingredientItem);
-
     // create tag pill on click and disable selected item click in list
     setDisableOnClick(ingredientItem, $ingredientsInput, 'ingredient-tag', recipes);
   });
 }
+
+/////////////////
+// let currentIdList = [];
+// const currentRecipesList = document.querySelectorAll('.recipe-card');
+// currentRecipesList.forEach(domRecipe => currentIdList.push(domRecipe.id));
+
+// console.log(currentRecipesList);
+
+// let newRecipes = [];
+
+// currentIdList.forEach((id) => {
+//   recipes.filter((recipe) => { 
+//     if (id === String(recipe.id)) {
+//     newRecipes.push(recipe);}
+//     ;});
+// });
+
+// const updatedListOfIngredients = (newRecipes) => {
+//   let ingredients = [];
+//   newRecipes.forEach((recipe) => {
+//     recipe.ingredients.forEach((ingredient) => {
+//       const formattedIngredient = capitalize(ingredient.ingredient);
+//       ingredients.push(formattedIngredient);
+//     });
+//   });
+//   // create an array with unique values
+//   filteredIngredients = [...new Set(ingredients)];
+//   filteredIngredients.sort();
+
+//   return filteredIngredients;
+// };
+////////////////
 
 const allIngredients = (recipes) => {
   let listOfIngredients = [];
@@ -57,10 +87,10 @@ const allIngredients = (recipes) => {
   });
 
   // create an array with unique values
-  filteredIngredients = [...new Set(listOfIngredients)];
-  filteredIngredients.sort();
+  ingredients = [...new Set(listOfIngredients)];
+  ingredients.sort();
 
-  return filteredIngredients;
+  return ingredients;
 };
 
 // create appliances li elements for filter buttons
@@ -75,7 +105,6 @@ function buildAppliancesFilterItems(appliances, recipes) {
     $appliancesListContainer.appendChild(applianceItem);
 
     filterItemIsSelected(tagsList, applianceItem);
-
     // create tag pill on click and disable selected item click in list
     setDisableOnClick(applianceItem, $appliancesInput, 'appliance-tag', recipes);
   });
@@ -88,9 +117,9 @@ const allAppliances = (recipes) => {
     listOfAppliances.push(formattedAppliance);
   });
 
-  filteredAppliances = [...new Set(listOfAppliances)];
-  filteredAppliances.sort();
-  return filteredAppliances;
+  appliances = [...new Set(listOfAppliances)];
+  appliances.sort();
+  return appliances;
 };
 
 // create ustensils li elements for filter buttons
@@ -104,7 +133,6 @@ function buildUstensilsFilterItems(ustensils, recipes) {
     $ustensilsListContainer.appendChild(ustensilItem);
 
     filterItemIsSelected(tagsList, ustensilItem);
-    
     setDisableOnClick(ustensilItem, $ustensilsInput, 'ustensil-tag', recipes);
   });
 }
@@ -119,9 +147,9 @@ const allUstensils = (recipes) => {
   });
 
   // create an array with unique values
-  filteredUstensils = [...new Set(listOfUstensils)];
-  filteredUstensils.sort();
-  return filteredUstensils;
+  ustensils = [...new Set(listOfUstensils)];
+  ustensils.sort();
+  return ustensils;
 };
 
 // manage filter buttons classes for UI modifications via CSS
@@ -154,24 +182,19 @@ function handleFilterButtonsBehaviour() {
 // call tag pill creation function using the clicked list element (ingredient, appliance or ustensil) and add to UI
 function addTagPillOnClick(element, tagFamily, recipes) {
   const newTag = createTagPill(element);
-
   newTag.classList.add(tagFamily);
   $tagsContainer.appendChild(newTag);
 
   // Remove tag from container
   newTag.addEventListener('click', function() {
     const itemToRemoveDisableFrom = document.getElementById(this.dataset.idSelected);
-    itemToRemoveDisableFrom.classList.remove('disabled');
+    // FIXME - remove if statement when every thing's fixed
+    if (itemToRemoveDisableFrom) {
+      itemToRemoveDisableFrom.classList.remove('disabled');
+    }
     this.remove();
     search(recipes);
   });
-}
-
-// takes a text in argument and return that text with first letter only to uppercase
-function capitalize(text) {
-  const uppercaseFirstLetter = text.charAt(0).toUpperCase();
-  const formattedText = uppercaseFirstLetter + text.slice(1).toLowerCase();
-  return formattedText;
 }
 
 // remove keyboard focus on active element - used in filter inputs
@@ -179,7 +202,7 @@ function removeFocus() {
   document.activeElement?.blur();
 }
 
-// checks if a filter list item is in tags in order to add class disabled on list regeneration (i.e. focus event in filter inputs)
+// checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)
 function filterItemIsSelected(tags, item) {
   let attributesList = [];
   tags.forEach(tag => attributesList.push(tag.dataset.idSelected));

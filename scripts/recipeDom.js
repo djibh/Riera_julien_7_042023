@@ -19,6 +19,7 @@ export function buildRecipesDOM(recipesList) {
       "gy-4"
     );
     const recipeCard = document.createElement("article");
+    recipeCard.setAttribute('id', recipe.id);
     recipeCard.classList.add("card");
     recipeCard.classList.add("recipe-card");
     const imgContainer = document.createElement('div');
