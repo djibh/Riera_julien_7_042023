@@ -133,6 +133,7 @@ export function search(dataSource) {
  */
 export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
   container.innerHTML = "";
+  search(recipes);
   const { ingredients, appliances, ustensils } = updateFilterItemsList();
 
   switch (document.activeElement.id) {
@@ -154,7 +155,7 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
   }
 
   filteredRecipes = [];
-  search(recipes);
+  
   buildUiFunction(dataSource, recipes);
 
   input.addEventListener("input", () => {

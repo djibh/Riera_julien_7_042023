@@ -189,9 +189,9 @@ function addTagPillOnClick(element, tagFamily, recipes) {
   newTag.addEventListener('click', function() {
     const itemToRemoveDisableFrom = document.getElementById(this.dataset.idSelected);
     // FIXME - remove if statement when every thing's fixed
-    if (itemToRemoveDisableFrom) {
-      itemToRemoveDisableFrom.classList.remove('disabled');
-    }
+
+    itemToRemoveDisableFrom.classList.remove('disabled');
+    
     this.remove();
     search(recipes);
   });
