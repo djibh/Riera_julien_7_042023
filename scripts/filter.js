@@ -11,9 +11,11 @@ const $ingredientsListContainer = document.querySelector(".ingredients-filter__l
 const $appliancesListContainer = document.querySelector(".appliances-filter__list");
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
-let { ingredients, appliances, ustensils } = updateFilterItemsList();
+let { ingredients, appliances, ustensils } = updateFilterItemsList;
+
 
 export function buildFiltersContentItems(recipes) {
+  console.log(ingredients);
   allIngredients(recipes);
   allAppliances(recipes);
   allUstensils(recipes);
@@ -44,38 +46,6 @@ function buildIngredientsFilterItems(ingredients, recipes) {
     setDisableOnClick(ingredientItem, $ingredientsInput, 'ingredient-tag', recipes);
   });
 }
-
-/////////////////
-// let currentIdList = [];
-// const currentRecipesList = document.querySelectorAll('.recipe-card');
-// currentRecipesList.forEach(domRecipe => currentIdList.push(domRecipe.id));
-
-// console.log(currentRecipesList);
-
-// let newRecipes = [];
-
-// currentIdList.forEach((id) => {
-//   recipes.filter((recipe) => { 
-//     if (id === String(recipe.id)) {
-//     newRecipes.push(recipe);}
-//     ;});
-// });
-
-// const updatedListOfIngredients = (newRecipes) => {
-//   let ingredients = [];
-//   newRecipes.forEach((recipe) => {
-//     recipe.ingredients.forEach((ingredient) => {
-//       const formattedIngredient = capitalize(ingredient.ingredient);
-//       ingredients.push(formattedIngredient);
-//     });
-//   });
-//   // create an array with unique values
-//   filteredIngredients = [...new Set(ingredients)];
-//   filteredIngredients.sort();
-
-//   return filteredIngredients;
-// };
-////////////////
 
 const allIngredients = (recipes) => {
   let listOfIngredients = [];

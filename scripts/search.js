@@ -15,6 +15,7 @@ export function search(dataSource) {
   const $tagsList = document.querySelectorAll(".badge");
 
   const userInput = $mainSearchInput.value.trim().toLowerCase();
+  filteredRecipes = dataSource;
 
   // refresh recipes grid
   $bsRow.innerHTML = "";
@@ -33,19 +34,19 @@ export function search(dataSource) {
 
   // fetch results from search and update recipes grid
   if ($tagsList.length === 0) {
-    dataSource = getMatchingResults(userInput);
-    buildRecipesDOM(dataSource);
+    filteredRecipes = getMatchingResults(userInput);
+    buildRecipesDOM(filteredRecipes);
     return;
   }
 
   // check whether we have an user input in search bar before filtering data
   if (!userInput) {
-    const filteredRecipes = getFilteredResults(dataSource);
+    filteredRecipes = getFilteredResults(dataSource);
     buildRecipesDOM(filteredRecipes);
     return;
   } else {
-    dataSource = getMatchingResults(userInput);
-    const filteredRecipes = getFilteredResults(dataSource);
+    filteredRecipes = getMatchingResults(userInput);
+    filteredRecipes = getFilteredResults(filteredRecipes);
     buildRecipesDOM(filteredRecipes);
     return;
   }
@@ -131,10 +132,14 @@ export function search(dataSource) {
  * @param {HTMLElement} container This must be the parent element used to wrap results' UI elements
  * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
  */
-export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
+export async function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
   container.innerHTML = "";
   search(recipes);
-  const { ingredients, appliances, ustensils } = updateFilterItemsList();
+  const { ingredients, appliances, ustensils } = await updateFilterItemsList();
+
+  console.log('====================================');
+  console.log(filteredRecipes);
+  console.log('====================================');
 
   switch (document.activeElement.id) {
     case "ingredients-dropdown":
@@ -152,10 +157,11 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
         dataSource = ustensils;
       }
       break;
+    default:
+      break;
   }
 
   filteredRecipes = [];
-  
   buildUiFunction(dataSource, recipes);
 
   input.addEventListener("input", () => {
@@ -180,7 +186,7 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
   }
 }
 
-export function updateFilterItemsList() {
+export async function updateFilterItemsList() {
   // get unique values for ingredients list, using filtered recipes
 
   // list of ingredients
