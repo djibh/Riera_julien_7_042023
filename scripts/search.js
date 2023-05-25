@@ -53,13 +53,10 @@ export function search(dataSource) {
 
   // filters recipes with matching user input from dataSource
   function getMatchingResults(input) {
-    return dataSource.filter(
-      (recipe) =>
+    return dataSource.filter((recipe) =>
         recipe.name.toLowerCase().includes(input) ||
         recipe.description.toLowerCase().includes(input) ||
-        recipe.ingredients.some((ingredient) =>
-          ingredient.ingredient.toLowerCase().includes(input)
-        )
+        recipe.ingredients.some((ingredient) =>ingredient.ingredient.toLowerCase().includes(input))
     );
   }
 
@@ -132,25 +129,25 @@ export function search(dataSource) {
  * @param {HTMLElement} container This must be the parent element used to wrap results' UI elements
  * @param {Function} buildUiFunction This parameter is used to refer to the DOM building function
  */
-export async function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
+export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
   container.innerHTML = "";
   search(recipes);
-  const { ingredients, appliances, ustensils } = await getFilterListItems(filteredRecipes);
+  const { ingredients, appliances, ustensils } = getFilterListItems(filteredRecipes);
 
   switch (document.activeElement.id) {
     case "ingredients-dropdown":
       if (filteredRecipes.length > 0) {
-        dataSource = ingredients;
+        dataSource.ingredients = ingredients;
       }
       break;
     case "appliances-dropdown":
       if (filteredRecipes.length > 0) {
-        dataSource = appliances;
+        dataSource.appliances = appliances;
       }
       break;
     case "ustensils-dropdown":
       if (filteredRecipes.length > 0) {
-        dataSource = ustensils;
+        dataSource.ustensils = ustensils;
       }
       break;
     default:
@@ -181,49 +178,3 @@ export async function filtersSearch(dataSource, recipes, input, container, build
     return dataSource.filter((data) => data.toLowerCase().includes(input));
   }
 }
-
-// export function getFilterListItems() {
-//   // get unique values for ingredients list, using filtered recipes
-
-//   // list of ingredients
-//   let listOfIngredients = [];
-//   filteredRecipes.forEach((recipe) => {
-//     recipe.ingredients.forEach((ingredient) => {
-//       const formattedIngredient = capitalize(ingredient.ingredient);
-//       listOfIngredients.push(formattedIngredient);
-//     });
-//   });
-
-//   // create an array with unique values
-//   const filteredIngredients = [...new Set(listOfIngredients)];
-//   filteredIngredients.sort();
-
-//   // list of appliances
-//   let appliances = [];
-//   filteredRecipes.forEach((recipe) => {
-//     const formattedAppliance = capitalize(recipe.appliance);
-//     appliances.push(formattedAppliance);
-//   });
-
-//   const filteredAppliances = [...new Set(appliances)];
-//   filteredAppliances.sort();
-
-//   // list of appliances
-//   let listOfUstensils = [];
-//   filteredRecipes.forEach((recipe) => {
-//     recipe.ustensils.forEach((ustensil) => {
-//       const formattedUstensil = capitalize(ustensil);
-//       listOfUstensils.push(formattedUstensil);
-//     });
-//   });
-
-//   // create an array with unique values
-//   const filteredUstensils = [...new Set(listOfUstensils)];
-//   filteredUstensils.sort();
-
-//   return {
-//     ingredients: [...filteredIngredients],
-//     appliances: [...filteredAppliances],
-//     ustensils: [...filteredUstensils]
-//   };
-// }
