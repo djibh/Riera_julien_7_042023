@@ -1,5 +1,5 @@
-import { capitalize } from "./utils/capitalize.js";
 import { buildRecipesDOM } from "./recipeDom.js";
+import { getFilterListItems } from "./filter.js";
 
 let filteredRecipes = [];
 
@@ -135,11 +135,7 @@ export function search(dataSource) {
 export async function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
   container.innerHTML = "";
   search(recipes);
-  const { ingredients, appliances, ustensils } = await updateFilterItemsList();
-
-  console.log('====================================');
-  console.log(filteredRecipes);
-  console.log('====================================');
+  const { ingredients, appliances, ustensils } = await getFilterListItems(filteredRecipes);
 
   switch (document.activeElement.id) {
     case "ingredients-dropdown":
@@ -186,48 +182,48 @@ export async function filtersSearch(dataSource, recipes, input, container, build
   }
 }
 
-export async function updateFilterItemsList() {
-  // get unique values for ingredients list, using filtered recipes
+// export function getFilterListItems() {
+//   // get unique values for ingredients list, using filtered recipes
 
-  // list of ingredients
-  let listOfIngredients = [];
-  filteredRecipes.forEach((recipe) => {
-    recipe.ingredients.forEach((ingredient) => {
-      const formattedIngredient = capitalize(ingredient.ingredient);
-      listOfIngredients.push(formattedIngredient);
-    });
-  });
+//   // list of ingredients
+//   let listOfIngredients = [];
+//   filteredRecipes.forEach((recipe) => {
+//     recipe.ingredients.forEach((ingredient) => {
+//       const formattedIngredient = capitalize(ingredient.ingredient);
+//       listOfIngredients.push(formattedIngredient);
+//     });
+//   });
 
-  // create an array with unique values
-  const filteredIngredients = [...new Set(listOfIngredients)];
-  filteredIngredients.sort();
+//   // create an array with unique values
+//   const filteredIngredients = [...new Set(listOfIngredients)];
+//   filteredIngredients.sort();
 
-  // list of appliances
-  let appliances = [];
-  filteredRecipes.forEach((recipe) => {
-    const formattedAppliance = capitalize(recipe.appliance);
-    appliances.push(formattedAppliance);
-  });
+//   // list of appliances
+//   let appliances = [];
+//   filteredRecipes.forEach((recipe) => {
+//     const formattedAppliance = capitalize(recipe.appliance);
+//     appliances.push(formattedAppliance);
+//   });
 
-  const filteredAppliances = [...new Set(appliances)];
-  filteredAppliances.sort();
+//   const filteredAppliances = [...new Set(appliances)];
+//   filteredAppliances.sort();
 
-  // list of appliances
-  let listOfUstensils = [];
-  filteredRecipes.forEach((recipe) => {
-    recipe.ustensils.forEach((ustensil) => {
-      const formattedUstensil = capitalize(ustensil);
-      listOfUstensils.push(formattedUstensil);
-    });
-  });
+//   // list of appliances
+//   let listOfUstensils = [];
+//   filteredRecipes.forEach((recipe) => {
+//     recipe.ustensils.forEach((ustensil) => {
+//       const formattedUstensil = capitalize(ustensil);
+//       listOfUstensils.push(formattedUstensil);
+//     });
+//   });
 
-  // create an array with unique values
-  const filteredUstensils = [...new Set(listOfUstensils)];
-  filteredUstensils.sort();
+//   // create an array with unique values
+//   const filteredUstensils = [...new Set(listOfUstensils)];
+//   filteredUstensils.sort();
 
-  return {
-    ingredients: [...filteredIngredients],
-    appliances: [...filteredAppliances],
-    ustensils: [...filteredUstensils]
-  };
-}
+//   return {
+//     ingredients: [...filteredIngredients],
+//     appliances: [...filteredAppliances],
+//     ustensils: [...filteredUstensils]
+//   };
+// }

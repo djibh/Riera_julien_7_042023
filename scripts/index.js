@@ -6,6 +6,7 @@ import { buildRecipesDOM } from "./recipeDom.js";
 const $mainSearchInput = document.getElementById("search-bar");
 
 function init() {
+  
   buildRecipesDOM(recipes);
   buildFiltersContentItems(recipes);
   search(recipes);
