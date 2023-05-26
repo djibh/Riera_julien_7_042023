@@ -12,7 +12,6 @@ const $ingredientsListContainer = document.querySelector(".ingredients-filter__l
 const $appliancesListContainer = document.querySelector(".appliances-filter__list");
 const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
-
 export function buildFiltersContentItems(recipes) {
   const { ingredients, appliances, ustensils } = getFilterListItems(recipes);
   const lol = { ingredients, appliances, ustensils };

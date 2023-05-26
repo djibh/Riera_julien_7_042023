@@ -1,5 +1,6 @@
 import { buildRecipesDOM } from "./recipeDom.js";
 import { getFilterListItems } from "./filter.js";
+import { nodeListToArray } from "./utils/utils.js";
 
 let filteredRecipes = [];
 
@@ -9,118 +10,82 @@ let filteredRecipes = [];
 export function search(dataSource) {
   const $bsRow = document.getElementById("recipes-grid");
   const $mainSearchInput = document.getElementById("search-bar");
-  const $ingredientsTags = document.querySelectorAll(".ingredient-tag");
-  const $applianceTags = document.querySelectorAll(".appliance-tag");
-  const $ustensilsTags = document.querySelectorAll(".ustensil-tag");
   const $tagsList = document.querySelectorAll(".badge");
-
   const userInput = $mainSearchInput.value.trim().toLowerCase();
   filteredRecipes = dataSource;
+  $bsRow.innerHTML = ""; // refresh recipes grid
 
-  // refresh recipes grid
-  $bsRow.innerHTML = "";
-
-  // check for input length
-  if (userInput.length < 3 && $tagsList.length === 0) {
-    buildRecipesDOM(dataSource);
-    return;
-  }
-
-  if (userInput.length < 3) {
-    dataSource = getFilteredResults(dataSource);
-    buildRecipesDOM(dataSource);
-    return;
-  }
-
-  // fetch results from search and update recipes grid
-  if ($tagsList.length === 0) {
-    filteredRecipes = getMatchingResults(userInput);
-    buildRecipesDOM(filteredRecipes);
-    return;
-  }
-
-  // check whether we have an user input in search bar before filtering data
-  if (!userInput) {
+  if (userInput.length < 3 && $tagsList.length !== 0) {
     filteredRecipes = getFilteredResults(dataSource);
-    buildRecipesDOM(filteredRecipes);
-    return;
-  } else {
-    filteredRecipes = getMatchingResults(userInput);
+  }
+  if (userInput.length > 2 && $tagsList.length === 0) {
+    filteredRecipes = getMatchingResults(userInput, dataSource);
+  }
+  if (userInput.length > 2 && $tagsList.length !== 0) {
+    filteredRecipes = getMatchingResults(userInput, dataSource);
     filteredRecipes = getFilteredResults(filteredRecipes);
-    buildRecipesDOM(filteredRecipes);
-    return;
   }
+  buildRecipesDOM(filteredRecipes);
+}
 
-  // filters recipes with matching user input from dataSource
-  function getMatchingResults(input) {
-    return dataSource.filter((recipe) =>
-        recipe.name.toLowerCase().includes(input) ||
-        recipe.description.toLowerCase().includes(input) ||
-        recipe.ingredients.some((ingredient) =>ingredient.ingredient.toLowerCase().includes(input))
-    );
+// filters recipes with matching user input from dataSource
+function getMatchingResults(input, dataSource) {
+  return dataSource.filter((recipe) => {
+    return recipe.name.toLowerCase().includes(input) ||
+      recipe.description.toLowerCase().includes(input) ||
+      recipe.ingredients.some((ingredient) => ingredient.ingredient.toLowerCase().includes(input));
+  });
+}
+
+// check whether filters have been selected or not and change data source for UI result
+function getFilteredResults(data) {
+  const $ustensilsTags = document.querySelectorAll(".ustensil-tag");
+  const $ingredientsTags = document.querySelectorAll(".ingredient-tag");
+  const $applianceTags = document.querySelectorAll(".appliance-tag");
+  filteredRecipes = [];
+
+  let tags = {
+    ingredients: nodeListToArray($ingredientsTags).map((i) => i.innerText.toLowerCase()),
+    appliances: nodeListToArray($applianceTags).map((a) => a.innerText.toLowerCase()),
+    ustentils: nodeListToArray($ustensilsTags).map((u) => u.innerText.toLowerCase()),
+  };
+
+  // ingredients based filter
+  if (tags.ingredients.length > 0) {
+    const filteredIngredients = data.filter((recipe) => {
+      return tags.ingredients.every((ingredient) => {
+        return recipe.ingredients.some((recipeIng) =>
+          recipeIng.ingredient.toLowerCase().includes(ingredient)
+        );
+      });
+    });
+    filteredRecipes.push(...filteredIngredients);
+  } else {
+    filteredRecipes = data;
   }
-
-  // check whether filters have been selected or not and change data source for UI result
-  function getFilteredResults(data) {
+  // appliances based filter
+  if (tags.appliances.length > 0) {
+    const filteredAppliances = filteredRecipes.filter((recipe) => {
+      return tags.appliances.every((appliance) => {
+        return recipe.appliance.toLowerCase().includes(appliance);
+      });
+    });
     filteredRecipes = [];
-
-    let tags = {
-      ingredients: [],
-      appliances: [],
-      ustentils: [],
-    };
-
-    // fill in tags objects according to tags found in DOM
-    $ingredientsTags.forEach((ingredient) =>
-      tags.ingredients.push(ingredient.innerText.toLowerCase())
-    );
-    $applianceTags.forEach((appliance) =>
-      tags.appliances.push(appliance.innerText.toLowerCase())
-    );
-    $ustensilsTags.forEach((ustensil) =>
-      tags.ustentils.push(ustensil.innerText.toLowerCase())
-    );
-
-    // ingredients based filter
-    if (tags.ingredients.length > 0) {
-      const filteredIngredients = data.filter((recipe) => {
-        return tags.ingredients.every((ingredient) => {
-          return recipe.ingredients.some((recipeIng) =>
-            recipeIng.ingredient.toLowerCase().includes(ingredient)
-          );
-        });
-      });
-      filteredRecipes.push(...filteredIngredients);
-    } else {
-      filteredRecipes = data;
-    }
-
-    // appliances based filter
-    if (tags.appliances.length > 0) {
-      const filteredAppliances = filteredRecipes.filter((recipe) => {
-        return tags.appliances.every((appliance) => {
-          return recipe.appliance.toLowerCase().includes(appliance);
-        });
-      });
-      filteredRecipes = [];
-      filteredRecipes.push(...filteredAppliances);
-    }
-
-    // ustensils based filter
-    if (tags.ustentils.length > 0) {
-      const filteredUstentils = filteredRecipes.filter((recipe) => {
-        return tags.ustentils.every((ustensil) => {
-          return recipe.ustensils.some((recipeUst) =>
-            recipeUst.toLowerCase().includes(ustensil)
-          );
-        });
-      });
-      filteredRecipes = [];
-      filteredRecipes.push(...filteredUstentils);
-    }
-
-    return filteredRecipes;
+    filteredRecipes.push(...filteredAppliances);
   }
+  // ustensils based filter
+  if (tags.ustentils.length > 0) {
+    const filteredUstentils = filteredRecipes.filter((recipe) => {
+      return tags.ustentils.every((ustensil) => {
+        return recipe.ustensils.some((recipeUst) =>
+          recipeUst.toLowerCase().includes(ustensil)
+        );
+      });
+    });
+    filteredRecipes = [];
+    filteredRecipes.push(...filteredUstentils);
+  }
+  return filteredRecipes;
 }
 
 /**
@@ -131,6 +96,9 @@ export function search(dataSource) {
  */
 export function filtersSearch(dataSource, recipes, input, container, buildUiFunction) {
   container.innerHTML = "";
+  let filters = [];
+  let currentData = '';
+  const initialDataSource = {...dataSource};
   search(recipes);
   const { ingredients, appliances, ustensils } = getFilterListItems(filteredRecipes);
 
@@ -138,16 +106,22 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
     case "ingredients-dropdown":
       if (filteredRecipes.length > 0) {
         dataSource.ingredients = ingredients;
+        filters = ingredients;
+        currentData = 'ingredients';
       }
       break;
     case "appliances-dropdown":
       if (filteredRecipes.length > 0) {
         dataSource.appliances = appliances;
+        filters = appliances;
+        currentData = 'appliances';
       }
       break;
     case "ustensils-dropdown":
       if (filteredRecipes.length > 0) {
         dataSource.ustensils = ustensils;
+        filters = ustensils;
+        currentData = 'ustensils';
       }
       break;
     default:
@@ -159,22 +133,23 @@ export function filtersSearch(dataSource, recipes, input, container, buildUiFunc
 
   input.addEventListener("input", () => {
     const userInput = input.value.trim().toLowerCase();
-
     // refresh recipes grid
     container.innerHTML = "";
-
     // check for input length
     if (userInput.length < 1) {
-      buildUiFunction(dataSource, recipes);
+      buildUiFunction(initialDataSource, recipes);
       return;
     }
 
-    // fetch results from search and update recipes grid
-    const results = getMatchingResults(userInput);
-    buildUiFunction(results, recipes);
+    if (currentData === 'ingredients') {
+      dataSource.ingredients = filters.filter((data) => data.toLowerCase().includes(userInput));
+    }
+    if (currentData === 'appliances') {
+      dataSource.appliances = filters.filter((data) => data.toLowerCase().includes(userInput));
+    }
+    if (currentData === 'ustensils') {
+      dataSource.ustensils = filters.filter((data) => data.toLowerCase().includes(userInput));
+    }
+    buildUiFunction(dataSource, recipes);
   });
-
-  function getMatchingResults(input) {
-    return dataSource.filter((data) => data.toLowerCase().includes(input));
-  }
 }
