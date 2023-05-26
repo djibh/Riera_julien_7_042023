@@ -1,7 +1,7 @@
 import { search, filtersSearch } from "./search.js";
 import { createTagPill } from "./tags.js";
 import { capitalize, nodeListToArray } from "./utils/utils.js";
-import { removeFocus } from "./utils/removeFocus.js";
+import { removeFocus } from "./removeFocus.js";
 
 const $tagsContainer = document.querySelector('.tags-container');
 const $filterButtons = document.querySelectorAll('.filters .btn');
@@ -14,11 +14,11 @@ const $ustensilsListContainer = document.querySelector(".ustensils-filter__list"
 
 export function buildFiltersContentItems(recipes) {
   const { ingredients, appliances, ustensils } = getFilterListItems(recipes);
-  const lol = { ingredients, appliances, ustensils };
+  const categories = { ingredients, appliances, ustensils };
   handleFilterButtonsBehaviour();
-  $ingredientsInput.addEventListener('focus', () => filtersSearch(lol, recipes, $ingredientsInput, $ingredientsListContainer , buildFilterItems));
-  $appliancesInput.addEventListener('focus', () => filtersSearch(lol, recipes, $appliancesInput, $appliancesListContainer , buildFilterItems));
-  $ustensilsInput.addEventListener('focus', () => filtersSearch(lol, recipes, $ustensilsInput, $ustensilsListContainer , buildFilterItems));
+  $ingredientsInput.addEventListener('focus', () => filtersSearch(categories, recipes, $ingredientsInput, $ingredientsListContainer , buildFilterItems));
+  $appliancesInput.addEventListener('focus', () => filtersSearch(categories, recipes, $appliancesInput, $appliancesListContainer , buildFilterItems));
+  $ustensilsInput.addEventListener('focus', () => filtersSearch(categories, recipes, $ustensilsInput, $ustensilsListContainer , buildFilterItems));
 }
 
 // create ingredients li elements for filter buttons
@@ -43,7 +43,7 @@ function buildFilterItems(items, recipes) {
         $ustensilsListContainer.appendChild(domItem);
         setDisableOnClick(domItem, $ustensilsInput, 'ustensil-tag', recipes);
       }
-      filterItemIsSelected(tagsList, domItem);
+      isFilterItemSelected(tagsList, domItem);
     });
   });
 }
@@ -85,15 +85,10 @@ function addTagPillOnClick(element, tagFamily, recipes) {
 }
 
 // checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)
-function filterItemIsSelected(tags, item) {
+function isFilterItemSelected(tags, item) {
   let attributesList = [];
   tags.forEach(tag => attributesList.push(tag.dataset.idSelected));
-  if (attributesList.includes(item.id)) {
-    item.classList.add('disabled');
-  }
-  // nodeListToArray(tags)
-  // .filter((tag) => tag.dataset.idSelected === item.id)
-  // .forEach((tag) => tag.classList.add('disabled'));
+  if (attributesList.includes(item.id)) return item.classList.add('disabled');
 }
 
 // create tag pill on click and disable selected item click in list
