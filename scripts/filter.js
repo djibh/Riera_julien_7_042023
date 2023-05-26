@@ -1,6 +1,6 @@
 import { search, filtersSearch } from "./search.js";
 import { createTagPill } from "./tags.js";
-import { capitalize, nodeListToArray } from "./utils/utils.js";
+import { capitalize } from "./utils/utils.js";
 import { removeFocus } from "./removeFocus.js";
 
 const tagsContainer = document.querySelector('.tags-container');
@@ -43,7 +43,7 @@ function buildFilterItems(items, recipes) {
         ustensilsListContainer.appendChild(domItem);
         setDisableOnClick(domItem, ustensilsInput, 'ustensil-tag', recipes);
       }
-      filterItemIsSelected(tagsList, domItem);
+      isFilterItemSelected(tagsList, domItem);
     });
   });
 }
@@ -65,7 +65,7 @@ function handleFilterButtonsBehaviour() {
   });
 
   function removeSelectedClassForFilterButtons() {
-    nodeListToArray(filterButtons)
+    Array.from(filterButtons)
       .filter((button) => button.classList.contains("selected"))
       .forEach((button) => button.classList.remove("selected"));
   }
@@ -85,7 +85,7 @@ function addTagPillOnClick(element, tagFamily, recipes) {
 }
 
 // checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)
-function filterItemIsSelected(tags, item) {
+function isFilterItemSelected(tags, item) {
   let attributesList = [];
   tags.forEach(tag => attributesList.push(tag.dataset.idSelected));
   if (attributesList.includes(item.id)) return item.classList.add('disabled');

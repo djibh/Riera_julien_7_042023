@@ -1,6 +1,5 @@
 import { buildRecipesDOM } from "./recipeDom.js";
 import { getFilterListItems } from "./filter.js";
-import { nodeListToArray } from "./utils/utils.js";
 
 let filteredRecipes = [];
 
@@ -45,9 +44,9 @@ function getFilteredResults(data) {
   filteredRecipes = [];
 
   let tags = {
-    ingredients: nodeListToArray($ingredientsTags).map((i) => i.innerText.toLowerCase()),
-    appliances: nodeListToArray($applianceTags).map((a) => a.innerText.toLowerCase()),
-    ustentils: nodeListToArray($ustensilsTags).map((u) => u.innerText.toLowerCase()),
+    ingredients: Array.from($ingredientsTags).map((i) => i.innerText.toLowerCase()),
+    appliances: Array.from($applianceTags).map((a) => a.innerText.toLowerCase()),
+    ustentils: Array.from($ustensilsTags).map((u) => u.innerText.toLowerCase()),
   };
 
   // ingredients based filter
