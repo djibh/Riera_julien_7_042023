@@ -3,22 +3,22 @@ import { createTagPill } from "./tags.js";
 import { capitalize, nodeListToArray } from "./utils/utils.js";
 import { removeFocus } from "./removeFocus.js";
 
-const $tagsContainer = document.querySelector('.tags-container');
-const $filterButtons = document.querySelectorAll('.filters .btn');
-const $ingredientsInput = document.getElementById('ingredients-dropdown');
-const $appliancesInput = document.getElementById('appliances-dropdown');
-const $ustensilsInput = document.getElementById('ustensils-dropdown');
-const $ingredientsListContainer = document.querySelector(".ingredients-filter__list");
-const $appliancesListContainer = document.querySelector(".appliances-filter__list");
-const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
+const tagsContainer = document.querySelector('.tags-container');
+const filterButtons = document.querySelectorAll('.filters .btn');
+const ingredientsInput = document.getElementById('ingredients-dropdown');
+const appliancesInput = document.getElementById('appliances-dropdown');
+const ustensilsInput = document.getElementById('ustensils-dropdown');
+const ingredientsListContainer = document.querySelector(".ingredients-filter__list");
+const appliancesListContainer = document.querySelector(".appliances-filter__list");
+const ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
 export function buildFiltersContentItems(recipes) {
   const { ingredients, appliances, ustensils } = getFilterListItems(recipes);
-  const categories = { ingredients, appliances, ustensils };
+  const lol = { ingredients, appliances, ustensils };
   handleFilterButtonsBehaviour();
-  $ingredientsInput.addEventListener('focus', () => filtersSearch(categories, recipes, $ingredientsInput, $ingredientsListContainer , buildFilterItems));
-  $appliancesInput.addEventListener('focus', () => filtersSearch(categories, recipes, $appliancesInput, $appliancesListContainer , buildFilterItems));
-  $ustensilsInput.addEventListener('focus', () => filtersSearch(categories, recipes, $ustensilsInput, $ustensilsListContainer , buildFilterItems));
+  ingredientsInput.addEventListener('focus', () => filtersSearch(lol, recipes, ingredientsInput, ingredientsListContainer , buildFilterItems));
+  appliancesInput.addEventListener('focus', () => filtersSearch(lol, recipes, appliancesInput, appliancesListContainer , buildFilterItems));
+  ustensilsInput.addEventListener('focus', () => filtersSearch(lol, recipes, ustensilsInput, ustensilsListContainer , buildFilterItems));
 }
 
 // create ingredients li elements for filter buttons
@@ -32,25 +32,25 @@ function buildFilterItems(items, recipes) {
       domItem.classList.add('filter-list__item');
       domItem.innerText = item;
       if (type === 'ingredients') {
-        $ingredientsListContainer.appendChild(domItem);
-        setDisableOnClick(domItem, $ingredientsInput, 'ingredient-tag', recipes);
+        ingredientsListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, ingredientsInput, 'ingredient-tag', recipes);
       }
       if (type === 'appliances') {
-        $appliancesListContainer.appendChild(domItem);
-        setDisableOnClick(domItem, $appliancesInput, 'appliance-tag', recipes);
+        appliancesListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, appliancesInput, 'appliance-tag', recipes);
       }
       if (type === 'ustensils') {
-        $ustensilsListContainer.appendChild(domItem);
-        setDisableOnClick(domItem, $ustensilsInput, 'ustensil-tag', recipes);
+        ustensilsListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, ustensilsInput, 'ustensil-tag', recipes);
       }
-      isFilterItemSelected(tagsList, domItem);
+      filterItemIsSelected(tagsList, domItem);
     });
   });
 }
 
 // manage filter buttons classes for UI modifications via CSS
 function handleFilterButtonsBehaviour() {
-  $filterButtons.forEach((button) => {
+  filterButtons.forEach((button) => {
     button.addEventListener("click", function() {
       // remove selected class when already selected class is click again and remove focus from input
       if (this.classList.contains("selected")) {
@@ -65,7 +65,7 @@ function handleFilterButtonsBehaviour() {
   });
 
   function removeSelectedClassForFilterButtons() {
-    nodeListToArray($filterButtons)
+    nodeListToArray(filterButtons)
       .filter((button) => button.classList.contains("selected"))
       .forEach((button) => button.classList.remove("selected"));
   }
@@ -75,7 +75,7 @@ function handleFilterButtonsBehaviour() {
 function addTagPillOnClick(element, tagFamily, recipes) {
   const newTag = createTagPill(element);
   newTag.classList.add(tagFamily);
-  $tagsContainer.appendChild(newTag);
+  tagsContainer.appendChild(newTag);
   newTag.addEventListener('click', function() {
     const itemToRemoveDisableFrom = document.getElementById(this.dataset.idSelected);
     itemToRemoveDisableFrom.classList.remove('disabled');
@@ -85,7 +85,7 @@ function addTagPillOnClick(element, tagFamily, recipes) {
 }
 
 // checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)
-function isFilterItemSelected(tags, item) {
+function filterItemIsSelected(tags, item) {
   let attributesList = [];
   tags.forEach(tag => attributesList.push(tag.dataset.idSelected));
   if (attributesList.includes(item.id)) return item.classList.add('disabled');
