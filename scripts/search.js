@@ -28,14 +28,6 @@ export function search(dataSource) {
 }
 
 // filters recipes with matching user input from dataSource
-// function getMatchingResults(input, dataSource) {
-//   return dataSource.filter((recipe) => {
-//     return recipe.name.toLowerCase().includes(input) ||
-//       recipe.description.toLowerCase().includes(input) ||
-//       recipe.ingredients.some((ingredient) => ingredient.ingredient.toLowerCase().includes(input));
-//   });
-// }
-
 function getMatchingResults(input, dataSource) {
   const matchingResults = [];
 
@@ -53,8 +45,6 @@ function getMatchingResults(input, dataSource) {
 
   return matchingResults;
 }
-
-
 
 // check whether filters have been selected or not and change data source for UI result
 function getFilteredResults(data) {
