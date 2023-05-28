@@ -40,16 +40,17 @@ function getMatchingResults(input, dataSource) {
     // check if input is in name or description
     if (recipeName.indexOf(input) !== -1 || recipeDescription.indexOf(input) !== -1) {
       matchingResults.push(recipe);
-    } 
-
-    // check if input is in ingredients list
-    for (let j = 0; j < recipeIngredients.length; j++) {
-      const ingredient = recipeIngredients[j].ingredient.toLowerCase();
-      if (ingredient.indexOf(input) !== -1) {
-        matchingResults.push(recipe);
-        break;
+    } else {
+      // check if input is in ingredients list
+      for (let j = 0; j < recipeIngredients.length; j++) {
+        const ingredient = recipeIngredients[j].ingredient.toLowerCase();
+        if (ingredient.indexOf(input) !== -1) {
+          matchingResults.push(recipe);
+          break;
+        }
       }
     }
+    
   }
   return matchingResults;
 }
