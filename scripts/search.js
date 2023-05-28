@@ -27,25 +27,7 @@ export function search(dataSource) {
   buildRecipesDOM(filteredRecipes);
 }
 
-// filters recipes with matching user input from dataSource
-// function getMatchingResults(input, dataSource) {
-//   const matchingResults = [];
-
-//   for (let i = 0; i < dataSource.length; i++) {
-//     const recipe = dataSource[i];
-//     const recipeIngredients = recipe.ingredients;
-        
-//     for (let j = 0; j < recipeIngredients.length; j++) {
-//       const ingredient = recipeIngredients[j].ingredient.toLowerCase();
-//       if (ingredient.indexOf(input) !== -1) {
-//         matchingResults.push(recipe);
-//       }
-//     }
-//   }
-
-//   return matchingResults;
-// }
-
+// compare input vs recipes list to fetch matching results
 function getMatchingResults(input, dataSource) {
   const matchingResults = [];
 
