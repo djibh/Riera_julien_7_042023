@@ -1,94 +1,63 @@
 import { search, filtersSearch } from "./search.js";
 import { createTagPill } from "./tags.js";
-import { capitalize } from "./utils/capitalize.js";
-import { removeFocus } from "./utils/removeFocus.js";
+import { capitalize } from "./utils/utils.js";
+import { removeFocus } from "./removeFocus.js";
 
-const $tagsContainer = document.querySelector('.tags-container');
-const $filterButtons = document.querySelectorAll('.filters .btn');
-const $ingredientsInput = document.getElementById('ingredients-dropdown');
-const $appliancesInput = document.getElementById('appliances-dropdown');
-const $ustensilsInput = document.getElementById('ustensils-dropdown');
-const $ingredientsListContainer = document.querySelector(".ingredients-filter__list");
-const $appliancesListContainer = document.querySelector(".appliances-filter__list");
-const $ustensilsListContainer = document.querySelector(".ustensils-filter__list");
+const tagsContainer = document.querySelector('.tags-container');
+const filterButtons = document.querySelectorAll('.filters .btn');
+const ingredientsInput = document.getElementById('ingredients-dropdown');
+const appliancesInput = document.getElementById('appliances-dropdown');
+const ustensilsInput = document.getElementById('ustensils-dropdown');
+const ingredientsListContainer = document.querySelector(".ingredients-filter__list");
+const appliancesListContainer = document.querySelector(".appliances-filter__list");
+const ustensilsListContainer = document.querySelector(".ustensils-filter__list");
 
-
-export async function buildFiltersContentItems(recipes) {
-  const { ingredients, appliances, ustensils } = await getFilterListItems(recipes);
-
-  buildIngredientsFilterItems(ingredients, recipes);
-  buildAppliancesFilterItems(appliances, recipes);
-  buildUstensilsFilterItems(ustensils, recipes);
-
+export function buildFiltersContentItems(recipes) {
+  const { ingredients, appliances, ustensils } = getFilterListItems(recipes);
+  const lol = { ingredients, appliances, ustensils };
   handleFilterButtonsBehaviour();
-
-  $ingredientsInput.addEventListener('focus', () => filtersSearch(ingredients, recipes, $ingredientsInput, $ingredientsListContainer , buildIngredientsFilterItems));
-  $appliancesInput.addEventListener('focus', () => filtersSearch(appliances, recipes, $appliancesInput, $appliancesListContainer , buildAppliancesFilterItems));
-  $ustensilsInput.addEventListener('focus', () => filtersSearch(ustensils, recipes, $ustensilsInput, $ustensilsListContainer , buildUstensilsFilterItems));
+  ingredientsInput.addEventListener('focus', () => filtersSearch(lol, recipes, ingredientsInput, ingredientsListContainer , buildFilterItems));
+  appliancesInput.addEventListener('focus', () => filtersSearch(lol, recipes, appliancesInput, appliancesListContainer , buildFilterItems));
+  ustensilsInput.addEventListener('focus', () => filtersSearch(lol, recipes, ustensilsInput, ustensilsListContainer , buildFilterItems));
 }
 
 // create ingredients li elements for filter buttons
-function buildIngredientsFilterItems(ingredients, recipes) {
-  const tagsList = document.querySelectorAll('.badge');
-  ingredients.forEach((ingredient) => {
-    const ingredientItem = document.createElement("li");
-    ingredientItem.setAttribute('id', `ingredient-${ingredient.toLowerCase().replace(/\s/g, '')}`); // creates id with item text w/o spaces
-    ingredientItem.classList.add('filter-list__item');
-    ingredientItem.innerText = ingredient;
-    $ingredientsListContainer.appendChild(ingredientItem);
+function buildFilterItems(items, recipes) {
+  Object.entries(items).forEach(([type, subItems]) => {
+    const tagsList = document.querySelectorAll('.badge');
 
-    filterItemIsSelected(tagsList, ingredientItem);
-    // create tag pill on click and disable selected item click in list
-    setDisableOnClick(ingredientItem, $ingredientsInput, 'ingredient-tag', recipes);
+    subItems.forEach((item) => {
+      const domItem = document.createElement("li");
+      domItem.setAttribute('id', `${type.slice(0, -1)}-${item.toLowerCase().replace(/\s/g, '')}`); // creates id with item text w/o spaces
+      domItem.classList.add('filter-list__item');
+      domItem.innerText = item;
+      if (type === 'ingredients') {
+        ingredientsListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, ingredientsInput, 'ingredient-tag', recipes);
+      }
+      if (type === 'appliances') {
+        appliancesListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, appliancesInput, 'appliance-tag', recipes);
+      }
+      if (type === 'ustensils') {
+        ustensilsListContainer.appendChild(domItem);
+        setDisableOnClick(domItem, ustensilsInput, 'ustensil-tag', recipes);
+      }
+      isFilterItemSelected(tagsList, domItem);
+    });
   });
 }
-
-// create appliances li elements for filter buttons
-function buildAppliancesFilterItems(appliances, recipes) {
-  const tagsList = document.querySelectorAll('.badge');
-
-  appliances.forEach((appliance) => {
-    const applianceItem = document.createElement("li");
-    applianceItem.setAttribute('id', `appliance-${appliance.toLowerCase().replace(/\s/g, '')}`);
-    applianceItem.classList.add('filter-list__item');
-    applianceItem.innerText = appliance;
-    $appliancesListContainer.appendChild(applianceItem);
-
-    filterItemIsSelected(tagsList, applianceItem);
-    // create tag pill on click and disable selected item click in list
-    setDisableOnClick(applianceItem, $appliancesInput, 'appliance-tag', recipes);
-  });
-}
-
-
-// create ustensils li elements for filter buttons
-function buildUstensilsFilterItems(ustensils, recipes) {
-  const tagsList = document.querySelectorAll('.badge');
-  ustensils.forEach((ustensil) => {
-    const ustensilItem = document.createElement("li");
-    ustensilItem.setAttribute('id', `ustensil-${ustensil.toLowerCase().replace(/\s/g, '')}`);
-    ustensilItem.classList.add('filter-list__item');
-    ustensilItem.innerText = ustensil;
-    $ustensilsListContainer.appendChild(ustensilItem);
-
-    filterItemIsSelected(tagsList, ustensilItem);
-    setDisableOnClick(ustensilItem, $ustensilsInput, 'ustensil-tag', recipes);
-  });
-}
-
 
 // manage filter buttons classes for UI modifications via CSS
 function handleFilterButtonsBehaviour() {
-  $filterButtons.forEach((button) => {
+  filterButtons.forEach((button) => {
     button.addEventListener("click", function() {
-
       // remove selected class when already selected class is click again and remove focus from input
       if (this.classList.contains("selected")) {
         this.classList.remove("selected");
         removeFocus();
         return;
       }
-
       // Reduce size of other filters before increasing size of the new selected one
       removeSelectedClassForFilterButtons();
       this.classList.toggle("selected");
@@ -96,11 +65,9 @@ function handleFilterButtonsBehaviour() {
   });
 
   function removeSelectedClassForFilterButtons() {
-    $filterButtons.forEach((button) => {
-      if (button.classList.contains("selected")) {
-        button.classList.remove("selected");
-      }
-    });
+    Array.from(filterButtons)
+      .filter((button) => button.classList.contains("selected"))
+      .forEach((button) => button.classList.remove("selected"));
   }
 }
 
@@ -108,30 +75,20 @@ function handleFilterButtonsBehaviour() {
 function addTagPillOnClick(element, tagFamily, recipes) {
   const newTag = createTagPill(element);
   newTag.classList.add(tagFamily);
-  $tagsContainer.appendChild(newTag);
-
-  // Remove tag from container
+  tagsContainer.appendChild(newTag);
   newTag.addEventListener('click', function() {
     const itemToRemoveDisableFrom = document.getElementById(this.dataset.idSelected);
-    // FIXME - remove if statement when every thing's fixed
-
     itemToRemoveDisableFrom.classList.remove('disabled');
-    
     this.remove();
     search(recipes);
   });
 }
 
 // checks if a filter list item is in tags in order to add class 'disabled' on list regeneration (i.e. focus event in filter inputs)
-function filterItemIsSelected(tags, item) {
+function isFilterItemSelected(tags, item) {
   let attributesList = [];
   tags.forEach(tag => attributesList.push(tag.dataset.idSelected));
-
-  if (attributesList.includes(item.id)) {
-    item.classList.add('disabled');
-    return;
-  }
-  return false;
+  if (attributesList.includes(item.id)) return item.classList.add('disabled');
 }
 
 // create tag pill on click and disable selected item click in list
@@ -144,48 +101,24 @@ function setDisableOnClick(item, filterInput, filterCategory, recipes) {
   });
 }
 
-export async function getFilterListItems(recipes) {
-  // get unique values for ingredients list, using filtered recipes
+export function getFilterListItems(recipes) {
+  const listOfIngredients = [];
+  const appliances = [];
+  const listOfUstensils = [];
 
-  // list of ingredients
-  let listOfIngredients = [];
   recipes.forEach((recipe) => {
     recipe.ingredients.forEach((ingredient) => {
-      const formattedIngredient = capitalize(ingredient.ingredient);
-      listOfIngredients.push(formattedIngredient);
+      listOfIngredients.push(capitalize(ingredient.ingredient));
     });
-  });
-
-  // create an array with unique values
-  const filteredIngredients = [...new Set(listOfIngredients)];
-  filteredIngredients.sort();
-
-  // list of appliances
-  let appliances = [];
-  recipes.forEach((recipe) => {
-    const formattedAppliance = capitalize(recipe.appliance);
-    appliances.push(formattedAppliance);
-  });
-
-  const filteredAppliances = [...new Set(appliances)];
-  filteredAppliances.sort();
-
-  // list of appliances
-  let listOfUstensils = [];
-  recipes.forEach((recipe) => {
+    appliances.push(capitalize(recipe.appliance));
     recipe.ustensils.forEach((ustensil) => {
-      const formattedUstensil = capitalize(ustensil);
-      listOfUstensils.push(formattedUstensil);
+      listOfUstensils.push(capitalize(ustensil));
     });
   });
-
-  // create an array with unique values
-  const filteredUstensils = [...new Set(listOfUstensils)];
-  filteredUstensils.sort();
-
+  // Set is used to return array with unique values
   return {
-    ingredients: [...filteredIngredients],
-    appliances: [...filteredAppliances],
-    ustensils: [...filteredUstensils]
+    ingredients: [...new Set(listOfIngredients)].sort(),
+    appliances: [...new Set(appliances)].sort(),
+    ustensils: [...new Set(listOfUstensils)].sort()
   };
 }
