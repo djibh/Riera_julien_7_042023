@@ -28,23 +28,50 @@ export function search(dataSource) {
 }
 
 // filters recipes with matching user input from dataSource
+// function getMatchingResults(input, dataSource) {
+//   const matchingResults = [];
+
+//   for (let i = 0; i < dataSource.length; i++) {
+//     const recipe = dataSource[i];
+//     const recipeIngredients = recipe.ingredients;
+        
+//     for (let j = 0; j < recipeIngredients.length; j++) {
+//       const ingredient = recipeIngredients[j].ingredient.toLowerCase();
+//       if (ingredient.indexOf(input) !== -1) {
+//         matchingResults.push(recipe);
+//       }
+//     }
+//   }
+
+//   return matchingResults;
+// }
+
 function getMatchingResults(input, dataSource) {
   const matchingResults = [];
 
   for (let i = 0; i < dataSource.length; i++) {
     const recipe = dataSource[i];
+    const recipeName = recipe.name.toLowerCase();
+    const recipeDescription = recipe.description.toLowerCase();
     const recipeIngredients = recipe.ingredients;
-        
+
+    // check if input is in name or description
+    if (recipeName.indexOf(input) !== -1 || recipeDescription.indexOf(input) !== -1) {
+      matchingResults.push(recipe);
+    } 
+
+    // check if input is in ingredients list
     for (let j = 0; j < recipeIngredients.length; j++) {
       const ingredient = recipeIngredients[j].ingredient.toLowerCase();
       if (ingredient.indexOf(input) !== -1) {
         matchingResults.push(recipe);
+        break;
       }
     }
   }
-
   return matchingResults;
 }
+
 
 // check whether filters have been selected or not and change data source for UI result
 function getFilteredResults(data) {
