@@ -7,20 +7,20 @@ let filteredRecipes = [];
  * @param {[string|number]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
  */
 export function search(dataSource) {
-  const $bsRow = document.getElementById("recipes-grid");
-  const $mainSearchInput = document.getElementById("search-bar");
-  const $tagsList = document.querySelectorAll(".badge");
-  const userInput = $mainSearchInput.value.trim().toLowerCase();
+  const bsRow = document.getElementById("recipes-grid");
+  const mainSearchInput = document.getElementById("search-bar");
+  const tagsList = document.querySelectorAll(".badge");
+  const userInput = mainSearchInput.value.trim().toLowerCase();
   filteredRecipes = dataSource;
-  $bsRow.innerHTML = ""; // refresh recipes grid
+  bsRow.innerHTML = ""; // refresh recipes grid
 
-  if (userInput.length < 3 && $tagsList.length !== 0) {
+  if (userInput.length < 3 && tagsList.length !== 0) {
     filteredRecipes = getFilteredResults(dataSource);
   }
-  if (userInput.length > 2 && $tagsList.length === 0) {
+  if (userInput.length > 2 && tagsList.length === 0) {
     filteredRecipes = getMatchingResults(userInput, dataSource);
   }
-  if (userInput.length > 2 && $tagsList.length !== 0) {
+  if (userInput.length > 2 && tagsList.length !== 0) {
     filteredRecipes = getMatchingResults(userInput, dataSource);
     filteredRecipes = getFilteredResults(filteredRecipes);
   }
@@ -86,6 +86,7 @@ function getFilteredResults(data) {
   }
   return filteredRecipes;
 }
+
 
 /**
  * @param {[string|number]} dataSource Can be recipes for the main search bar or any of filter type (ingredients / appliances / Ustensils)
